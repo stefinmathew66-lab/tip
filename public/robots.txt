@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tipsplit.com/sitemap.xml
+Sitemap: https://tipsplit.com/sitemap-index.xml
