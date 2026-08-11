@@ -1,0 +1,57 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+    title="About Us — TipSplit" 
+    description="Learn more about TipSplit, a free, browser-local tip pooling and compliance calculator designed for restaurants and hospitality teams."
+>
+    <main class="app-container relative z-10 max-w-(--max-width) mx-auto px-4 py-6 sm:px-6 sm:py-10 pb-12">
+        <!-- Back Link -->
+        <a href="/" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M10 13L5 8l5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to Calculator
+        </a>
+
+        <!-- Content Card -->
+        <section class="card static-card bg-bg-card border border-border rounded-lg p-6 sm:p-8 static-content">
+            <h1>About TipSplit</h1>
+            <p class="lead">Fair tips, zero drama. That is our mission.</p>
+            
+            <p>TipSplit was built to solve one of the most common headaches in the hospitality, restaurant, and service industries: calculating and splitting tips at the end of a long, exhausting shift.</p>
+            
+            <h2>Why We Built This</h2>
+            <p>Many shift leaders, managers, and owners rely on complex, outdated spreadsheets or manual math to divide tip pools. This process is time-consuming, prone to errors, and can lead to misunderstandings or "tip drama" among team members. We wanted to create a tool that makes the calculations instantaneous, transparent, and mathematically accurate.</p>
+            
+            <h2>Our Core Principles</h2>
+            
+            <h3>🔒 Complete Privacy</h3>
+            <p>We respect your team's privacy. TipSplit is designed as a browser-local application. <strong>We do not collect, store, or transmit any data</strong> you enter—including names, hours worked, point assignments, or tip amounts—to any server. All processing happens entirely on your local device.</p>
+            
+            <h3>⚖️ Law & Compliance Awareness</h3>
+            <p>Tip pooling is governed by strict state and federal labor laws, such as the Fair Labor Standards Act (FLSA). It is very easy to make compliance mistakes, such as including managers in employee pools or including kitchen staff when claiming a tip credit. TipSplit integrates live rules checking for various states to keep your business operating safely.</p>
+            
+            <h3>⚡ Fast & Transparent</h3>
+            <p>We believe in transparency. By showing exact calculations and rates per hour or points, team members can clearly understand how their share was calculated, fostering trust and a better workplace culture.</p>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer text-center mt-8 pt-5">
+            <p class="text-text-muted text-[0.78rem] mb-3">100% free · No sign-up · Your data stays in your browser</p>
+            <nav class="footer-links flex justify-center gap-4 text-[0.75rem] font-medium text-text-secondary" aria-label="Footer Navigation">
+                <a href="/about" class="hover:text-accent transition-colors duration-150 no-underline">About Us</a>
+                <span class="text-text-muted" aria-hidden="true">•</span>
+                <a href="/privacy" class="hover:text-accent transition-colors duration-150 no-underline">Privacy Policy</a>
+                <span class="text-text-muted" aria-hidden="true">•</span>
+                <a href="/terms" class="hover:text-accent transition-colors duration-150 no-underline">Terms & Conditions</a>
+                <span class="text-text-muted" aria-hidden="true">•</span>
+                <a href="/contact" class="hover:text-accent transition-colors duration-150 no-underline">Contact Us</a>
+            </nav>
+            <p class="text-text-muted text-[0.65rem] mt-4 opacity-75 max-w-sm mx-auto leading-normal">
+                TipSplit is reader-supported. We may earn a small commission through affiliate links on this site at no extra cost to you.
+            </p>
+        </footer>
+    </main>
+</Layout>
