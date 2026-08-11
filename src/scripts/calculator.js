@@ -81,9 +81,15 @@
     function init() {
         if (!totalTipsInput) return; // Guard for Astro pages if script is loaded globally
 
-        // Start with 2 empty members
-        addMember('', '', '', 'foh');
-        addMember('', '', '', 'foh');
+        const hasSavedState = loadAppState();
+
+        if (!hasSavedState) {
+            // Start with 2 empty members
+            addMember('', '', '', 'foh');
+            addMember('', '', '', 'foh');
+        } else {
+            renderTeamList();
+        }
 
         // Event listeners
         methodBtns.forEach(btn => btn.addEventListener('click', () => setMethod(btn.dataset.method)));
@@ -140,11 +146,47 @@
         } else {
             validateCompliance();
         }
+
+        // Save state before leaving the page via links
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                saveAppState();
+            });
+        });
+
+        // Automatically calculate if there is total tips input
+        if (totalTipsInput && parseFloat(totalTipsInput.value) > 0) {
+            calculate(true);
+        }
     }
 
     // ─── State & Wage Settings Change ────────
     function handleStateChange() {
         const state = stateSelect.value;
+
+        // Redirect to state-specific page if dropdown changed
+        const STATE_URLS = {
+            'CA': '/california-tip-pooling-calculator',
+            'TX': '/texas-tip-pooling-calculator',
+            'NY': '/new-york-tip-pooling-calculator',
+            'FL': '/florida-tip-pooling-calculator',
+            'US': '/'
+        };
+        const targetPath = STATE_URLS[state];
+        if (targetPath) {
+            const currentPath = window.location.pathname;
+            const normalize = p => p.replace(/\/$/, '');
+            const normCurrent = normalize(currentPath);
+            const normTarget = normalize(targetPath);
+            
+            if (normCurrent !== normTarget && !(normTarget === '' && normCurrent === '/index.html')) {
+                // Save current state before redirecting
+                saveAppState();
+                window.location.href = targetPath;
+                return;
+            }
+        }
+
         const stateRules = LEGAL_RULES.states[state] || LEGAL_RULES.states.US;
         
         if (!stateRules.allowsTipCredit) {
@@ -312,6 +354,8 @@
         const stateRules = LEGAL_RULES.states[state] || LEGAL_RULES.states.US;
         const takeTipCredit = takeTipCreditInput ? takeTipCreditInput.checked : false;
 
+        saveAppState();
+
         let hasManager = false;
         let hasBoh = false;
         let activeMems = members.filter(m => m.name.trim() !== '');
@@ -359,6 +403,7 @@
 
     // ─── Auto Recalculate ───────────────────
     function autoRecalc() {
+        saveAppState();
         if (resultsCard.style.display !== 'none') {
             calculate(true);
         }
@@ -380,6 +425,21 @@
         const activeMems = members.filter(m => m.name.trim() !== '');
         if (activeMems.length === 0) {
             if (!silent) showError(teamList, 'Add at least one team member with a name');
+            return;
+        }
+
+        // Check compliance first
+        validateCompliance();
+        const isNotCompliant = complianceAlert && complianceAlert.classList.contains('warning');
+
+        if (isNotCompliant && complianceAlert.style.display !== 'none') {
+            if (!silent) {
+                // Shake the compliance alert banner
+                complianceAlert.classList.add('shake-alert');
+                setTimeout(() => complianceAlert.classList.remove('shake-alert'), 400);
+                showToast('Non-compliant setup. Resolve compliance alert below to calculate.');
+            }
+            if (resultsCard) resultsCard.style.display = 'none';
             return;
         }
 
@@ -610,6 +670,77 @@
         const div = document.createElement('div');
         div.textContent = str;
         return div.innerHTML;
+    }
+
+    function saveAppState() {
+        try {
+            const stateToSave = {
+                currentMethod: currentMethod,
+                totalTips: totalTipsInput ? totalTipsInput.value : '',
+                takeTipCredit: takeTipCreditInput ? takeTipCreditInput.checked : false,
+                members: members.map(m => ({
+                    name: m.name,
+                    role: m.role,
+                    hours: m.hours,
+                    points: m.points,
+                    type: m.type
+                }))
+            };
+            sessionStorage.setItem('tipsplit_state', JSON.stringify(stateToSave));
+        } catch (e) {
+            console.error('Failed to save state to sessionStorage', e);
+        }
+    }
+
+    function loadAppState() {
+        try {
+            const saved = sessionStorage.getItem('tipsplit_state');
+            if (!saved) return false;
+
+            const savedState = JSON.parse(saved);
+
+            if (savedState.currentMethod) {
+                currentMethod = savedState.currentMethod;
+                methodBtns.forEach(btn => {
+                    const isActive = btn.dataset.method === currentMethod;
+                    btn.classList.toggle('active', isActive);
+                    btn.setAttribute('aria-checked', isActive ? 'true' : 'false');
+                    btn.setAttribute('tabindex', isActive ? '0' : '-1');
+                });
+
+                if (rolePresets) {
+                    rolePresets.style.display = currentMethod === 'points' ? 'block' : 'none';
+                }
+            }
+
+            if (totalTipsInput && savedState.totalTips !== undefined) {
+                totalTipsInput.value = savedState.totalTips;
+            }
+
+            if (takeTipCreditInput && savedState.takeTipCredit !== undefined) {
+                takeTipCreditInput.checked = savedState.takeTipCredit;
+            }
+
+            if (savedState.members && Array.isArray(savedState.members)) {
+                members = [];
+                memberIdCounter = 0;
+                savedState.members.forEach(m => {
+                    memberIdCounter++;
+                    members.push({
+                        id: memberIdCounter,
+                        name: m.name || '',
+                        role: m.role || '',
+                        hours: m.hours || '',
+                        points: m.points || '',
+                        type: m.type || 'foh'
+                    });
+                });
+            }
+            return true;
+        } catch (e) {
+            console.error('Failed to load state from sessionStorage', e);
+            return false;
+        }
     }
 
     // ─── Boot ───────────────────────────────

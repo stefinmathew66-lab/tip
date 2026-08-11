@@ -896,3 +896,7 @@
     font-weight: 800 !important;
   }
 }
+
+@utility shake-alert {
+  animation: shake 0.4s var(--ease-base);
+}
