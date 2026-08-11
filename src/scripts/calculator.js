@@ -68,6 +68,8 @@
     const methodExplanation = document.getElementById('methodExplanation');
     const copyBtn = document.getElementById('copyBtn');
     const printBtn = document.getElementById('printBtn');
+    const pdfBtn = document.getElementById('pdfBtn');
+    const whatsappBtn = document.getElementById('whatsappBtn');
     const toast = document.getElementById('toast');
 
     // Compliance elements
@@ -117,6 +119,8 @@
         calculateBtn.addEventListener('click', calculate);
         copyBtn.addEventListener('click', copyResults);
         printBtn.addEventListener('click', () => window.print());
+        if (pdfBtn) pdfBtn.addEventListener('click', () => loadJsPdf(generatePdf));
+        if (whatsappBtn) whatsappBtn.addEventListener('click', shareWhatsApp);
 
         // State & Tip Credit setup
         if (stateSelect && takeTipCreditInput) {
@@ -741,6 +745,206 @@
             console.error('Failed to load state from sessionStorage', e);
             return false;
         }
+    }
+
+    // ─── PDF & WhatsApp Export ──────────────
+    let isJsPdfLoading = false;
+    
+    function loadJsPdf(callback) {
+        if (window.jspdf) {
+            callback();
+            return;
+        }
+        if (isJsPdfLoading) {
+            setTimeout(() => loadJsPdf(callback), 100);
+            return;
+        }
+        isJsPdfLoading = true;
+        
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        script.onload = () => {
+            isJsPdfLoading = false;
+            callback();
+        };
+        script.onerror = () => {
+            isJsPdfLoading = false;
+            showToast('Failed to load PDF library. Check your connection.');
+        };
+        document.head.appendChild(script);
+    }
+
+    function generatePdf() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        const stateSelect = document.getElementById('stateSelect');
+        const stateName = stateSelect ? stateSelect.options[stateSelect.selectedIndex].text : 'Federal (FLSA Baseline)';
+        const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        
+        // Header
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(22);
+        doc.setTextColor(240, 165, 0); // Accent #f0a500
+        doc.text("TipSplit Calculation Summary", 20, 25);
+        
+        doc.setFontSize(10);
+        doc.setFont("Helvetica", "normal");
+        doc.setTextColor(100, 100, 100);
+        doc.text(`Generated on: ${dateStr}`, 20, 32);
+        
+        // Divider
+        doc.setDrawColor(220, 220, 220);
+        doc.line(20, 37, 190, 37);
+        
+        // Setup Card Details
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(12);
+        doc.setTextColor(30, 30, 30);
+        doc.text("Calculation Setup", 20, 47);
+        
+        doc.setFont("Helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(`Location / State Rules: ${stateName}`, 20, 55);
+        doc.text(`Split Method: ${currentMethod === 'equal' ? 'Equal Split' : currentMethod === 'hours' ? 'By Hours Worked' : 'By Role Points'}`, 20, 61);
+        doc.text(`Total Tips Pool: $${parseFloat(totalTipsInput.value).toFixed(2)}`, 20, 67);
+        
+        const activeMems = members.filter(m => m.name.trim() !== '');
+        
+        // Divider
+        doc.line(20, 75, 190, 75);
+        
+        // Table Headers
+        doc.setFont("Helvetica", "bold");
+        doc.text("No.", 20, 83);
+        doc.text("Team Member", 32, 83);
+        doc.text("Role / Class", 85, 83);
+        if (currentMethod === 'hours') {
+            doc.text("Hours", 125, 83);
+        } else if (currentMethod === 'points') {
+            doc.text("Points", 125, 83);
+        } else {
+            doc.text("Share", 125, 83);
+        }
+        doc.text("Tip Share ($)", 160, 83);
+        
+        // Divider under headers
+        doc.line(20, 87, 190, 87);
+        
+        // Table Body
+        doc.setFont("Helvetica", "normal");
+        let y = 94;
+        
+        let results = [];
+        if (currentMethod === 'equal') {
+            results = calcEqual(parseFloat(totalTipsInput.value), activeMems);
+        } else if (currentMethod === 'hours') {
+            results = calcByHours(parseFloat(totalTipsInput.value), activeMems, true);
+        } else if (currentMethod === 'points') {
+            results = calcByPoints(parseFloat(totalTipsInput.value), activeMems, true);
+        }
+        
+        if (results && results.length > 0) {
+            results.sort((a, b) => b.tipAmount - a.tipAmount);
+            results.forEach((r, idx) => {
+                if (y > 270) {
+                    doc.addPage();
+                    y = 25;
+                    // Redraw headers on new page
+                    doc.setFont("Helvetica", "bold");
+                    doc.text("No.", 20, y);
+                    doc.text("Team Member", 32, y);
+                    doc.text("Role / Class", 85, y);
+                    if (currentMethod === 'hours') {
+                        doc.text("Hours", 125, y);
+                    } else if (currentMethod === 'points') {
+                        doc.text("Points", 125, y);
+                    } else {
+                        doc.text("Share", 125, y);
+                    }
+                    doc.text("Tip Share ($)", 160, y);
+                    doc.line(20, y + 4, 190, y + 4);
+                    doc.setFont("Helvetica", "normal");
+                    y += 11;
+                }
+                
+                doc.text(`${idx + 1}`, 20, y);
+                doc.text(r.name, 32, y);
+                
+                const origMem = activeMems.find(m => m.name.trim() === r.name);
+                const roleClass = origMem ? origMem.type.toUpperCase() : 'FOH';
+                doc.text(roleClass, 85, y);
+                
+                if (currentMethod === 'hours') {
+                    doc.text(`${r.hours}h`, 125, y);
+                } else if (currentMethod === 'points') {
+                    doc.text(`${r.points} pts`, 125, y);
+                } else {
+                    doc.text(`${(100 / results.length).toFixed(1)}%`, 125, y);
+                }
+                
+                doc.text(`$${r.tipAmount.toFixed(2)}`, 160, y);
+                
+                doc.setDrawColor(245, 245, 245);
+                doc.line(20, y + 3, 190, y + 3);
+                doc.setDrawColor(220, 220, 220);
+                
+                y += 8;
+            });
+        }
+        
+        // Footer
+        doc.setFont("Helvetica", "italic");
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text("TipSplit — Fair tips, zero drama. Get started at https://tip-umber.vercel.app", 20, 285);
+        
+        doc.save(`tipsplit-summary-${stateName.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`);
+        showToast('PDF downloaded successfully!');
+    }
+
+    function shareWhatsApp() {
+        const stateSelect = document.getElementById('stateSelect');
+        const stateName = stateSelect ? stateSelect.options[stateSelect.selectedIndex].text : 'Federal (FLSA Baseline)';
+        const totalTipsVal = parseFloat(totalTipsInput.value);
+        
+        const activeMems = members.filter(m => m.name.trim() !== '');
+        
+        let results = [];
+        if (currentMethod === 'equal') {
+            results = calcEqual(totalTipsVal, activeMems);
+        } else if (currentMethod === 'hours') {
+            results = calcByHours(totalTipsVal, activeMems, true);
+        } else if (currentMethod === 'points') {
+            results = calcByPoints(totalTipsVal, activeMems, true);
+        }
+        
+        if (!results || results.length === 0) return;
+        results.sort((a, b) => b.tipAmount - a.tipAmount);
+        
+        let text = `📊 *TipSplit Summary*\n`;
+        text += `• *Rules / State:* ${stateName}\n`;
+        text += `• *Total Pool:* $${totalTipsVal.toFixed(2)}\n`;
+        text += `• *Split Method:* ${currentMethod === 'equal' ? 'Equal Split' : currentMethod === 'hours' ? 'By Hours Worked' : 'By Role Points'}\n`;
+        text += `• *Team Members:* ${results.length}\n\n`;
+        text += `*Share Breakdown:*\n`;
+        
+        results.forEach((r, idx) => {
+            const origMem = activeMems.find(m => m.name.trim() === r.name);
+            const roleClass = origMem ? origMem.type.toUpperCase() : 'FOH';
+            let detail = '';
+            if (currentMethod === 'hours') {
+                detail = ` (${r.hours}h)`;
+            } else if (currentMethod === 'points') {
+                detail = ` (${r.points} pts)`;
+            }
+            text += `${idx + 1}. *${r.name}* [${roleClass}]${detail}: *$${r.tipAmount.toFixed(2)}* (${r.percentage.toFixed(1)}%)\n`;
+        });
+        
+        text += `\nCalculated via https://tip-umber.vercel.app/`;
+        
+        const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
     }
 
     // ─── Boot ───────────────────────────────
