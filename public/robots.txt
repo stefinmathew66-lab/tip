@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tipsplit.com/sitemap-index.xml
+Sitemap: https://tip-umber.vercel.app/sitemap-index.xml

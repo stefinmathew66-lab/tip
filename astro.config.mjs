@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://tipsplit.com',
+  site: 'https://tip-umber.vercel.app',
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],
