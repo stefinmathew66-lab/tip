@@ -72,44 +72,10 @@ import Layout from '../layouts/Layout.astro';
             </div>
         </section>
 
-        <!-- Step 3: Compliance Rules -->
-        <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="stepCompliance" aria-labelledby="compliance-heading">
-            <div class="step-header flex items-center gap-3 mb-1.5">
-                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">3</span>
-                <h2 id="compliance-heading" class="text-lg font-bold text-text-primary text-balance">Compliance Rules</h2>
-            </div>
-            <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Select state and wage setup to check tip pool compliance.</p>
-            
-            <div class="compliance-grid grid grid-cols-2 gap-4 max-sm:grid-cols-1 max-sm:gap-3 pl-10">
-                <div class="input-group">
-                    <label for="stateSelect" class="block text-[0.75rem] font-semibold text-text-secondary uppercase tracking-wider mb-2">Location / State</label>
-                    <select id="stateSelect" class="w-full bg-bg-input border-1.5 border-border rounded-md py-3.5 px-3.5 text-text-primary text-sm font-medium transition-all duration-200 ease-(--ease-base) focus:border-accent focus:shadow-[0_0_0_3px_var(--color-accent-soft)] focus:outline-none">
-                        <option value="US">Federal (FLSA Baseline)</option>
-                        <option value="CA">California</option>
-                        <option value="FL">Florida</option>
-                        <option value="NY">New York</option>
-                        <option value="TX">Texas</option>
-                    </select>
-                </div>
-                
-                <div class="input-group flex flex-col justify-end">
-                    <label id="tipCreditContainer" class="flex items-center gap-2.5 cursor-pointer py-3 px-1">
-                        <input type="checkbox" id="takeTipCredit" class="w-4.5 h-4.5 rounded border-border bg-bg-input text-accent focus:ring-accent-soft focus:ring-offset-bg-primary">
-                        <span class="text-sm font-medium text-text-primary">Employer claims a tip credit</span>
-                    </label>
-                    <div id="tipCreditNote" class="text-[0.72rem] text-text-muted mt-1" style="display:none;"></div>
-                </div>
-            </div>
-
-            <div class="legal-source-disclaimer mt-4 pt-3.5 border-t border-border/40 text-[0.68rem] text-text-muted leading-relaxed pl-10">
-                <span>⚖️ <strong>Legal Disclaimer:</strong> Tip pooling regulations are highly complex and differ by state and local jurisdiction. This tool calculates shares based on user inputs and public rules current as of <strong>August 2026</strong> (source: U.S. Department of Labor). This does not constitute legal advice. Please consult an employment attorney or payroll expert to verify compliance.</span>
-            </div>
-        </section>
-
-        <!-- Step 4: Team Members -->
+        <!-- Step 3: Team Members -->
         <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="step3" aria-labelledby="step3-heading">
             <div class="step-header flex items-center gap-3 mb-1.5">
-                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">4</span>
+                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">3</span>
                 <h2 id="step3-heading" class="text-lg font-bold text-text-primary text-balance">Team Members</h2>
             </div>
             <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Add everyone who&rsquo;s in the tip pool today.</p>
@@ -138,6 +104,40 @@ import Layout from '../layouts/Layout.astro';
                 </svg>
                 Add Team Member
             </button>
+        </section>
+
+        <!-- Step 4: Compliance Rules -->
+        <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="stepCompliance" aria-labelledby="compliance-heading">
+            <div class="step-header flex items-center gap-3 mb-1.5">
+                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">4</span>
+                <h2 id="compliance-heading" class="text-lg font-bold text-text-primary text-balance">Compliance Rules</h2>
+            </div>
+            <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Select state and wage setup to check tip pool compliance.</p>
+            
+            <div class="compliance-grid grid grid-cols-2 gap-4 max-sm:grid-cols-1 max-sm:gap-3 pl-10">
+                <div class="input-group">
+                    <label for="stateSelect" class="block text-[0.75rem] font-semibold text-text-secondary uppercase tracking-wider mb-2">Location / State</label>
+                    <select id="stateSelect" class="w-full bg-bg-input border-1.5 border-border rounded-md py-3.5 px-3.5 text-text-primary text-sm font-medium transition-all duration-200 ease-(--ease-base) focus:border-accent focus:shadow-[0_0_0_3px_var(--color-accent-soft)] focus:outline-none">
+                        <option value="US">Federal (FLSA Baseline)</option>
+                        <option value="CA">California</option>
+                        <option value="FL">Florida</option>
+                        <option value="NY">New York</option>
+                        <option value="TX">Texas</option>
+                    </select>
+                </div>
+                
+                <div class="input-group flex flex-col justify-end">
+                    <label id="tipCreditContainer" class="flex items-center gap-2.5 cursor-pointer py-3 px-1">
+                        <input type="checkbox" id="takeTipCredit" class="w-4.5 h-4.5 rounded border-border bg-bg-input text-accent focus:ring-accent-soft focus:ring-offset-bg-primary">
+                        <span class="text-sm font-medium text-text-primary">Employer claims a tip credit</span>
+                    </label>
+                    <div id="tipCreditNote" class="text-[0.72rem] text-text-muted mt-1" style="display:none;"></div>
+                </div>
+            </div>
+
+            <div class="legal-source-disclaimer mt-4 pt-3.5 border-t border-border/40 text-[0.68rem] text-text-muted leading-relaxed pl-10">
+                <span>⚖️ <strong>Legal Disclaimer:</strong> Tip pooling regulations are highly complex and differ by state and local jurisdiction. This tool calculates shares based on user inputs and public rules current as of <strong>August 2026</strong> (source: U.S. Department of Labor). This does not constitute legal advice. Please consult an employment attorney or payroll expert to verify compliance.</span>
+            </div>
         </section>
 
         <!-- Compliance Status Banner -->
