@@ -71,6 +71,9 @@
     const pdfBtn = document.getElementById('pdfBtn');
     const whatsappBtn = document.getElementById('whatsappBtn');
     const toast = document.getElementById('toast');
+    const pointsSloganNote = document.getElementById('pointsSloganNote');
+    const mathAuditLog = document.getElementById('mathAuditLog');
+    const auditLogContent = document.getElementById('auditLogContent');
 
     // Shift History elements
     const saveShiftBtn = document.getElementById('saveShiftBtn');
@@ -273,7 +276,14 @@
         });
 
         // Show/hide role presets
-        rolePresets.style.display = method === 'points' ? 'block' : 'none';
+        if (rolePresets) {
+            rolePresets.style.display = method === 'points' ? 'block' : 'none';
+        }
+
+        // Show/hide points slogan note
+        if (pointsSloganNote) {
+            pointsSloganNote.style.display = method === 'points' ? 'flex' : 'none';
+        }
 
         // Re-render team members to show/hide fields
         renderTeamList();
@@ -646,6 +656,61 @@
         // Show results
         resultsCard.style.display = 'block';
         resultsCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        // Render Math Audit Log
+        if (mathAuditLog && auditLogContent) {
+            const logText = generateAuditLogText(totalTips, results);
+            auditLogContent.innerHTML = escapeHTML(logText)
+                .replace(/(===.*?===)/g, '<strong>$1</strong>')
+                .replace(/(Formula(?: \d)?:)/g, '<strong>$1</strong>')
+                .replace(/(Total Tips Pool:|Total Hours Worked:|Total Role Points Assigned:|Calculation:)/g, '<strong>$1</strong>')
+                .replace(/(Employee Share Calculations:|Distributions:)/g, '<strong>$1</strong>')
+                .replace(/( - [^:]+:)/g, '<strong>$1</strong>');
+            mathAuditLog.style.display = 'block';
+        }
+    }
+
+    function generateAuditLogText(totalTips, results) {
+        let log = '';
+        if (currentMethod === 'equal') {
+            log += `=== EQUAL SPLIT AUDIT LOG ===\n`;
+            log += `Formula: Total Tips ÷ Staff Size = Share per Member\n\n`;
+            log += `Total Tips Pool: $${totalTips.toFixed(2)}\n`;
+            log += `Staff Size: ${results.length}\n`;
+            log += `Calculation: $${totalTips.toFixed(2)} ÷ ${results.length} = $${(totalTips / results.length).toFixed(2)} per person\n\n`;
+            log += `Distributions:\n`;
+            results.forEach(r => {
+                log += ` - ${r.name}: $${r.tipAmount.toFixed(2)} (${r.percentage.toFixed(1)}%)\n`;
+            });
+        } else if (currentMethod === 'hours') {
+            const totalHours = results.reduce((sum, r) => sum + (r.hours || 0), 0);
+            const ratePerHour = totalHours > 0 ? totalTips / totalHours : 0;
+            log += `=== HOURS-BASED SPLIT AUDIT LOG ===\n`;
+            log += `Formula 1: Total Tips ÷ Total Hours Worked = Hourly Tip Rate\n`;
+            log += `Formula 2: Employee Hours Worked × Hourly Tip Rate = Employee Share\n\n`;
+            log += `Total Tips Pool: $${totalTips.toFixed(2)}\n`;
+            log += `Total Hours Worked: ${totalHours.toFixed(2)} hrs\n`;
+            log += `Calculation: $${totalTips.toFixed(2)} ÷ ${totalHours.toFixed(2)} hrs = $${ratePerHour.toFixed(4)}/hr\n\n`;
+            log += `Employee Share Calculations:\n`;
+            results.forEach(r => {
+                log += ` - ${r.name}: ${r.hours} hrs × $${ratePerHour.toFixed(4)}/hr = $${r.tipAmount.toFixed(2)} (${r.percentage.toFixed(1)}%)\n`;
+            });
+        } else if (currentMethod === 'points') {
+            const totalPoints = results.reduce((sum, r) => sum + (r.points || 0), 0);
+            const valuePerPoint = totalPoints > 0 ? totalTips / totalPoints : 0;
+            log += `=== ROLE-POINTS SPLIT AUDIT LOG ===\n`;
+            log += `Formula 1: Total Tips ÷ Total Points = Point Value Rate\n`;
+            log += `Formula 2: Employee Role Points × Point Value Rate = Employee Share\n\n`;
+            log += `Total Tips Pool: $${totalTips.toFixed(2)}\n`;
+            log += `Total Role Points Assigned: ${totalPoints} pts\n`;
+            log += `Calculation: $${totalTips.toFixed(2)} ÷ ${totalPoints} pts = $${valuePerPoint.toFixed(4)}/point\n\n`;
+            log += `Employee Share Calculations:\n`;
+            results.forEach(r => {
+                const roleStr = r.role ? ` (${r.role})` : '';
+                log += ` - ${r.name}${roleStr}: ${r.points} pts × $${valuePerPoint.toFixed(4)}/pt = $${r.tipAmount.toFixed(2)} (${r.percentage.toFixed(1)}%)\n`;
+            });
+        }
+        return log;
     }
 
     // ─── Copy to Clipboard ──────────────────
@@ -668,6 +733,23 @@
         });
 
         text += `───────────────────────────\n`;
+        
+        const activeMems = members.filter(m => m.name.trim() !== '');
+        let results = [];
+        if (currentMethod === 'equal') {
+            results = calcEqual(totalTips, activeMems);
+        } else if (currentMethod === 'hours') {
+            results = calcByHours(totalTips, activeMems, true);
+        } else if (currentMethod === 'points') {
+            results = calcByPoints(totalTips, activeMems, true);
+        }
+        if (results && results.length > 0) {
+            results.sort((a, b) => b.tipAmount - a.tipAmount);
+            text += `\nCalculation Audit Log:\n`;
+            text += generateAuditLogText(totalTips, results);
+            text += `\n───────────────────────────\n`;
+        }
+        
         text += `Generated by TipSplit`;
 
         navigator.clipboard.writeText(text).then(() => {
@@ -937,6 +1019,41 @@
             });
         }
         
+        // Print Calculation Audit Log in PDF
+        if (results && results.length > 0) {
+            // Draw Divider
+            doc.setDrawColor(200, 200, 200);
+            doc.line(20, y + 2, 190, y + 2);
+            y += 12;
+            
+            if (y > 240) {
+                doc.addPage();
+                y = 25;
+            }
+            
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(11);
+            doc.setTextColor(30, 30, 30);
+            doc.text("Calculation Audit Log", 20, y);
+            y += 8;
+            
+            doc.setFont("Helvetica", "normal");
+            doc.setFontSize(8.5);
+            doc.setTextColor(90, 90, 90);
+            
+            const logText = generateAuditLogText(parseFloat(totalTipsInput.value), results);
+            const splitLines = doc.splitTextToSize(logText, 170);
+            
+            splitLines.forEach(line => {
+                if (y > 275) {
+                    doc.addPage();
+                    y = 25;
+                }
+                doc.text(line, 20, y);
+                y += 4.5;
+            });
+        }
+        
         // Footer
         doc.setFont("Helvetica", "italic");
         doc.setFontSize(8);
@@ -985,6 +1102,19 @@
             text += `${idx + 1}. *${r.name}* [${roleClass}]${detail}: *$${r.tipAmount.toFixed(2)}* (${r.percentage.toFixed(1)}%)\n`;
         });
         
+        text += `\n*Calculation Audit Log:*\n`;
+        const logText = generateAuditLogText(totalTipsVal, results);
+        const formattedLog = logText
+            .replace(/===.*?===\n/, '')
+            .replace(/Formula( \d)?:/g, '*Formula:*')
+            .replace(/Total Tips Pool:/g, '*Total Tips:*')
+            .replace(/Total Hours Worked:/g, '*Total Hours Worked:*')
+            .replace(/Total Role Points Assigned:/g, '*Total Role Points:*')
+            .replace(/Calculation:/g, '*Calculation:*')
+            .replace(/Employee Share Calculations:/g, '*Share Calculations:*')
+            .replace(/Distributions:/g, '*Distributions:*');
+        text += formattedLog;
+
         text += `\nCalculated via https://tip-umber.vercel.app/`;
         
         const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;

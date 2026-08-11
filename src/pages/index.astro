@@ -22,7 +22,7 @@ import Layout from '../layouts/Layout.astro';
                 </div>
                 <span class="logo-text text-3xl font-extrabold bg-accent-gradient bg-clip-text text-transparent tracking-tight">TipSplit</span>
             </div>
-            <p class="tagline text-text-secondary text-sm font-normal">Fair tips, zero drama.</p>
+            <p class="tagline text-text-secondary text-sm font-normal max-w-xl mx-auto">Tired of your servers thinking you're doing the tip math wrong? I built a free calculator that shows them the exact breakdown.</p>
             <div class="flex items-center justify-center flex-wrap gap-x-3 gap-y-1.5 mt-4 text-[0.78rem] uppercase tracking-wider font-extrabold text-text-primary">
                 <span class="text-text-secondary">State Rules:</span>
                 <a href="/" class="text-text-primary hover:text-accent transition-colors duration-150 no-underline font-extrabold">FLSA Baseline</a>
@@ -45,6 +45,26 @@ import Layout from '../layouts/Layout.astro';
                 <a href="/contact" class="text-text-secondary hover:text-accent transition-colors duration-150 no-underline">Contact Us</a>
             </nav>
         </header>
+        
+        <!-- Privacy & Trust Guarantee Banner -->
+        <div class="trust-badge-banner" role="region" aria-label="Privacy & Trust Guarantee">
+            <span class="trust-badge-item" title="Calculations run locally in your browser. No data leaves your machine.">
+                🔒 <span>100% Local & Private</span>
+            </span>
+            <span class="w-1.5 h-1.5 rounded-full bg-border/40 max-sm:hidden" aria-hidden="true"></span>
+            <span class="trust-badge-item" title="No email, credit card, or registration required to use the calculator.">
+                📂 <span>No Sign-Up or Account</span>
+            </span>
+            <span class="w-1.5 h-1.5 rounded-full bg-border/40 max-sm:hidden" aria-hidden="true"></span>
+            <span class="trust-badge-item" title="Calculations are transparently detailed so you can audit them yourself.">
+                🧮 <span>Auditable Calculations</span>
+            </span>
+            <span class="w-1.5 h-1.5 rounded-full bg-border/40 max-sm:hidden" aria-hidden="true"></span>
+            <span class="trust-badge-item" title="No Wi-Fi in the back office? Doesn't matter. I coded it to work completely offline so you aren't trapped at work when the internet goes down.">
+                🌐 <span>Works 100% Offline</span>
+            </span>
+        </div>
+
 
         <!-- Step 1: Total Tips -->
         <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="step1" aria-labelledby="step1-heading">
@@ -83,6 +103,11 @@ import Layout from '../layouts/Layout.astro';
                     <div class="method-label text-[0.82rem] font-semibold text-center">By Role Points</div>
                     <div class="method-sub text-[0.7rem] text-text-muted text-center">Weighted by position</div>
                 </button>
+            </div>
+            
+            <div id="pointsSloganNote" class="text-[0.74rem] text-text-secondary mt-3.5 pl-10 flex items-start gap-2 transition-all duration-300" style="display: none;">
+                <span class="text-accent text-sm leading-none">💡</span>
+                <span>Don't want to split tips evenly with a lazy busser? Use our Points-Based split to make sure your top performers get the highest percentage.</span>
             </div>
         </section>
 
@@ -253,6 +278,14 @@ import Layout from '../layouts/Layout.astro';
                     <span aria-hidden="true">🔍</span> <strong>Transparency note:</strong> <span id="methodExplanation"></span>
                 </p>
             </div>
+
+            <!-- Math Audit Log -->
+            <div id="mathAuditLog" class="audit-log-section" style="display: none;">
+                <div class="audit-log-header">
+                    <span aria-hidden="true">🧮</span> Calculation Audit Log
+                </div>
+                <pre id="auditLogContent" class="audit-log-box" aria-label="Calculation steps breakdown"></pre>
+            </div>
         </section>
 
         <!-- Shift History Card -->
@@ -301,7 +334,7 @@ import Layout from '../layouts/Layout.astro';
             <ul class="list-disc pl-5 mb-4 text-sm text-text-secondary space-y-2">
                 <li><strong>Equal Split:</strong> Ideal for smaller shifts or tightly integrated teams (e.g., two bartenders on a single bar). All tips are pooled and divided equally among all eligible members.</li>
                 <li><strong>Hours-Based Split:</strong> The most common method for fluctuating shifts. Tips are divided proportionally based on the number of hours each employee worked. For example, if the pool collected $500 over 25 total staff hours, the rate is $20 per hour. A server who worked 6 hours receives $120, while a runner who worked 4 hours receives $80.</li>
-                <li><strong>Role-Based Points Split:</strong> The fairest method for full-service restaurants. Different roles receive different point weights reflecting their service impact. A bartender might receive 10 points, a runner 6 points, and a busser 4 points. The <strong>tip pooling calculator free</strong> software automatically sums the points, calculates the value per point, and distributes tips accordingly.</li>
+                <li><strong>Role-Based Points Split:</strong> Don't want to split tips evenly with a lazy busser? Use our Points-Based split to make sure your top performers get the highest percentage. Different roles receive different point weights reflecting their service impact (e.g. Server gets 10 pts, Bartender 8 pts, Busser 5 pts). The calculator automatically aggregates these points and distributes the tips proportionally.</li>
             </ul>
 
             <h3 class="text-md font-bold text-text-primary mt-6 mb-2">Why Choose Our Tip Pooling Calculator App?</h3>
@@ -333,6 +366,54 @@ import Layout from '../layouts/Layout.astro';
             <h2 class="text-xl font-bold text-text-primary mb-6">Frequently Asked Questions</h2>
             
             <div class="faq-list flex flex-col gap-2">
+                <details class="faq-accordion">
+                    <summary class="faq-question">
+                        <span>Is my tip pooling or staff data uploaded to a server?</span>
+                        <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                            <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>No. TipSplit is built entirely as a browser-local application. All calculations, numbers, and team rosters are processed directly in your web browser. We do not have a database, we do not collect or store your inputs, and your staff names or tip totals never leave your device. You can verify this by checking your browser's network tab or using the app offline.</p>
+                    </div>
+                </details>
+
+                <details class="faq-accordion">
+                    <summary class="faq-question">
+                        <span>Does this tip pooling calculator work offline without internet or Wi-Fi?</span>
+                        <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                            <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="faq-answer">
+                        <p><strong>Yes, 100% offline.</strong> The Restaurant Problem: The back office, the basement, and the walk-in cooler are notorious dead zones for cell service and Wi-Fi. A cloud-based app that needs a constant connection is useless during closing time. That is why we registered a Service Worker to cache the CSS, JS, and HTML in your browser. No Wi-Fi in the back office? Doesn't matter. I coded it to work completely offline so you aren't trapped at work when the internet goes down.</p>
+                    </div>
+                </details>
+
+                <details class="faq-accordion">
+                    <summary class="faq-question">
+                        <span>Why is TipSplit free? What's the catch?</span>
+                        <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                            <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>There is no catch. We built TipSplit as a 100% free community utility to support restaurant and hospitality workers by making end-of-shift calculations quick, simple, and drama-free. This tool contains no display ads, paid sponsors, or affiliate marketing links. We do not collect or sell your calculations or employee names—everything runs entirely local to your own device.</p>
+                    </div>
+                </details>
+
+                <details class="faq-accordion">
+                    <summary class="faq-question">
+                        <span>How do I know the calculator's math and compliance logic is accurate?</span>
+                        <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                            <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>TipSplit is designed with full transparency. Once you calculate tips, the tool exposes a detailed "Math Audit Log" at the bottom of the results card, showing the exact formula, total hours/points, and the exact step-by-step arithmetic. This allows you or your staff to verify every payout with a basic calculator. The compliance rules are based directly on the U.S. Department of Labor (DOL) FLSA guidelines and relevant state labor codes, updated for 2026.</p>
+                    </div>
+                </details>
+
                 <details class="faq-accordion">
                     <summary class="faq-question">
                         <span>What's the difference between tip pooling and tip sharing?</span>
@@ -539,9 +620,6 @@ import Layout from '../layouts/Layout.astro';
                 <span class="text-text-muted" aria-hidden="true">•</span>
                 <a href="/contact" class="hover:text-accent transition-colors duration-150 no-underline">Contact Us</a>
             </nav>
-            <p class="text-text-muted text-[0.65rem] mt-4 opacity-75 max-w-sm mx-auto leading-normal">
-                TipSplit is reader-supported. We may earn a small commission through affiliate links on this site at no extra cost to you.
-            </p>
         </footer>
     </main>
 </Layout>

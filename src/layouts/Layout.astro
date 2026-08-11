@@ -57,6 +57,17 @@ const ogImageURL = new URL(ogImage, Astro.site || Astro.url.origin);
 		{faqSchema && (
 			<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 		)}
+
+		<!-- Service Worker Registration for 100% Offline Capability -->
+		<script is:inline>
+			if ('serviceWorker' in navigator) {
+				window.addEventListener('load', () => {
+					navigator.serviceWorker.register('/sw.js')
+						.then(reg => console.log('Service Worker registered successfully:', reg.scope))
+						.catch(err => console.error('Service Worker registration failed:', err));
+				});
+			}
+		</script>
 	</head>
 	<body>
 		<slot />

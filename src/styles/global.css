@@ -900,3 +900,73 @@
 @utility shake-alert {
   animation: shake 0.4s var(--ease-base);
 }
+
+/* ============================================
+   Trust Badge Banner & Audit Log
+   ============================================ */
+.trust-badge-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  padding: 12px 18px;
+  background: rgba(24, 28, 37, 0.4);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.74rem;
+  color: var(--color-text-secondary);
+  transition: all 0.2s var(--ease-base);
+}
+
+.trust-badge-banner:hover {
+  border-color: rgba(240, 165, 0, 0.35);
+  background: rgba(24, 28, 37, 0.6);
+  box-shadow: 0 4px 20px rgba(240,165,0,0.01);
+}
+
+.trust-badge-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.audit-log-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+  animation: slideIn 0.3s var(--ease-base);
+}
+
+.audit-log-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.audit-log-box {
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.76rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.audit-log-box strong {
+  color: var(--color-accent);
+}
+
