@@ -474,8 +474,16 @@
         const totalTips = parseFloat(totalTipsInput.value);
 
         // Validation
-        if (isNaN(totalTips) || totalTips <= 0) {
+        if (isNaN(totalTips) || totalTipsInput.value.trim() === '') {
             if (!silent) showError(totalTipsInput, 'Enter the total tip amount');
+            return;
+        }
+        if (totalTips === 0) {
+            if (!silent) showError(totalTipsInput, 'Total tips cannot be $0.00 — enter an amount to split');
+            return;
+        }
+        if (totalTips < 0) {
+            if (!silent) showError(totalTipsInput, 'Total tips cannot be negative');
             return;
         }
 
