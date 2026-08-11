@@ -5,6 +5,50 @@
 (function () {
     'use strict';
 
+    // ─── Compliance Database (August 2026) ────
+    const LEGAL_RULES = {
+      "lastUpdated": "August 2026",
+      "source": "U.S. Department of Labor (DOL) Wage & Hour Division",
+      "disclaimer": "This tool provides general calculations and compliance alerts based on public rules, but does not constitute legal advice. Please consult an employment attorney or payroll specialist to verify compliance with your local laws.",
+      "states": {
+        "US": {
+          "name": "Federal (FLSA Baseline)",
+          "allowsTipCredit": true,
+          "bohRule": "no_tip_credit",
+          "managerRule": "never",
+          "notes": "Under federal FLSA rules, managers and supervisors can never participate in tip pools. Back-of-house (BOH) staff can only be included if the employer pays full minimum wage and takes NO tip credit."
+        },
+        "CA": {
+          "name": "California",
+          "allowsTipCredit": false,
+          "bohRule": "allowed",
+          "managerRule": "never",
+          "notes": "California strictly prohibits tip credits. Employers must pay full state minimum wage. Under CA Labor Code Section 351, BOH employees can be included in a tip pool if they are in the chain of service, but managers/agents are strictly excluded."
+        },
+        "TX": {
+          "name": "Texas",
+          "allowsTipCredit": true,
+          "bohRule": "no_tip_credit",
+          "managerRule": "never",
+          "notes": "Texas follows the federal FLSA baseline. BOH employees cannot participate in the tip pool if the employer claims a tip credit. Managers and supervisors cannot participate under any circumstances."
+        },
+        "NY": {
+          "name": "New York",
+          "allowsTipCredit": true,
+          "bohRule": "restricted",
+          "managerRule": "never",
+          "notes": "New York has strict FOH-only rules. BOH employees (cooks, dishwashers) cannot participate in a tip pool if a tip credit is claimed, and are generally restricted even without a tip credit unless they perform FOH-like direct customer-facing services. Managers are strictly excluded."
+        },
+        "FL": {
+          "name": "Florida",
+          "allowsTipCredit": true,
+          "bohRule": "no_tip_credit",
+          "managerRule": "never",
+          "notes": "Florida allows tip credits. BOH staff cannot participate in the tip pool if the employer claims a tip credit. Managers and supervisors can never participate."
+        }
+      }
+    };
+
     // ─── State ──────────────────────────────
     let currentMethod = 'equal';
     let memberIdCounter = 0;
@@ -26,13 +70,20 @@
     const printBtn = document.getElementById('printBtn');
     const toast = document.getElementById('toast');
 
+    // Compliance elements
+    const stateSelect = document.getElementById('stateSelect');
+    const takeTipCreditInput = document.getElementById('takeTipCredit');
+    const tipCreditContainer = document.getElementById('tipCreditContainer');
+    const tipCreditNote = document.getElementById('tipCreditNote');
+    const complianceAlert = document.getElementById('complianceAlert');
+
     // ─── Initialize ─────────────────────────
     function init() {
         if (!totalTipsInput) return; // Guard for Astro pages if script is loaded globally
 
         // Start with 2 empty members
-        addMember();
-        addMember();
+        addMember('', '', '', 'foh');
+        addMember('', '', '', 'foh');
 
         // Event listeners
         methodBtns.forEach(btn => btn.addEventListener('click', () => setMethod(btn.dataset.method)));
@@ -61,10 +112,19 @@
         copyBtn.addEventListener('click', copyResults);
         printBtn.addEventListener('click', () => window.print());
 
+        // State & Tip Credit setup
+        if (stateSelect && takeTipCreditInput) {
+            stateSelect.addEventListener('change', handleStateChange);
+            takeTipCreditInput.addEventListener('change', () => {
+                validateCompliance();
+                autoRecalc();
+            });
+        }
+
         // Role preset chips
         document.querySelectorAll('.preset-chip').forEach(chip => {
             chip.addEventListener('click', () => {
-                addMember(chip.dataset.role, '', chip.dataset.points);
+                addMember(chip.dataset.role, '', chip.dataset.points, 'foh');
             });
         });
 
@@ -73,6 +133,39 @@
 
         // Focus the total tips input on load
         setTimeout(() => totalTipsInput.focus(), 300);
+
+        // Run compliance check initially
+        validateCompliance();
+    }
+
+    // ─── State & Wage Settings Change ────────
+    function handleStateChange() {
+        const state = stateSelect.value;
+        const stateRules = LEGAL_RULES.states[state] || LEGAL_RULES.states.US;
+        
+        if (!stateRules.allowsTipCredit) {
+            takeTipCreditInput.checked = false;
+            takeTipCreditInput.disabled = true;
+            if (tipCreditContainer) {
+                tipCreditContainer.style.opacity = '0.5';
+                tipCreditContainer.style.cursor = 'not-allowed';
+            }
+            if (tipCreditNote) {
+                tipCreditNote.textContent = `${stateRules.name} does not allow tip credits.`;
+                tipCreditNote.style.display = 'block';
+            }
+        } else {
+            takeTipCreditInput.disabled = false;
+            if (tipCreditContainer) {
+                tipCreditContainer.style.opacity = '1';
+                tipCreditContainer.style.cursor = 'pointer';
+            }
+            if (tipCreditNote) {
+                tipCreditNote.style.display = 'none';
+            }
+        }
+        validateCompliance();
+        autoRecalc();
     }
 
     // ─── Method Switching ───────────────────
@@ -94,16 +187,18 @@
     }
 
     // ─── Member Management ──────────────────
-    function addMember(name = '', role = '', points = '') {
+    function addMember(name = '', role = '', points = '', type = 'foh') {
         memberIdCounter++;
         members.push({
             id: memberIdCounter,
             name: name,
             role: role,
             hours: '',
-            points: points
+            points: points,
+            type: type
         });
         renderTeamList();
+        validateCompliance();
         
         // Focus the name field of the new member
         setTimeout(() => {
@@ -116,6 +211,7 @@
         if (members.length <= 1) return; // Keep at least 1
         members = members.filter(m => m.id !== id);
         renderTeamList();
+        validateCompliance();
         autoRecalc();
     }
 
@@ -130,6 +226,11 @@
             const memberLabel = member.name.trim() || `Member ${idx + 1}`;
 
             let fieldsHTML = `
+                <select class="member-type" data-field="type" name="member-type-${idx}" aria-label="Role classification for ${memberLabel}">
+                    <option value="foh" ${member.type === 'foh' ? 'selected' : ''}>FOH</option>
+                    <option value="boh" ${member.type === 'boh' ? 'selected' : ''}>BOH</option>
+                    <option value="manager" ${member.type === 'manager' ? 'selected' : ''}>Manager</option>
+                </select>
                 <input type="text" class="member-name" placeholder="Name…" 
                        value="${escapeHTML(member.name)}" data-field="name" 
                        name="member-name-${idx}" aria-label="Name for member ${idx + 1}" 
@@ -169,11 +270,12 @@
             `;
 
             // Input change listeners
-            row.querySelectorAll('input').forEach(input => {
+            row.querySelectorAll('input, select').forEach(input => {
                 input.addEventListener('input', (e) => {
                     const field = e.target.dataset.field;
                     member[field] = e.target.value;
                     autoRecalc();
+                    validateCompliance();
                 });
 
                 // Enter key adds new member from last row
@@ -196,6 +298,59 @@
 
             teamList.appendChild(row);
         });
+    }
+
+    // ─── Compliance Check Logic ─────────────
+    function validateCompliance() {
+        if (!stateSelect || !complianceAlert) return;
+
+        const state = stateSelect.value;
+        const stateRules = LEGAL_RULES.states[state] || LEGAL_RULES.states.US;
+        const takeTipCredit = takeTipCreditInput ? takeTipCreditInput.checked : false;
+
+        let hasManager = false;
+        let hasBoh = false;
+        let activeMems = members.filter(m => m.name.trim() !== '');
+
+        activeMems.forEach(m => {
+            if (m.type === 'manager') hasManager = true;
+            if (m.type === 'boh') hasBoh = true;
+        });
+
+        let isCompliant = true;
+        let alertTitle = "Calculations Compliant";
+        let alertDesc = `Your tip pool configuration is compliant with <strong>${stateRules.name}</strong> rules. All participating employees are eligible.`;
+        
+        // 1. Manager check
+        if (hasManager) {
+            isCompliant = false;
+            alertTitle = "Compliance Alert: Manager Included";
+            alertDesc = `Under <strong>${stateRules.name}</strong> rules, managers and supervisors are strictly prohibited from participating in employee tip pools. Please remove them from the pool.`;
+        }
+        // 2. BOH check (Tip Credit)
+        else if (hasBoh && stateRules.allowsTipCredit && takeTipCredit) {
+            isCompliant = false;
+            alertTitle = "Compliance Alert: BOH with Tip Credit";
+            alertDesc = `Under <strong>${stateRules.name}</strong> rules, back-of-house (BOH) staff can only participate in a tip pool if the employer pays full minimum wage and claims <strong>NO tip credit</strong>. Turn off the tip credit option to include BOH staff.`;
+        }
+        // 3. NY state BOH restrictions
+        else if (hasBoh && state === 'NY') {
+            isCompliant = false;
+            alertTitle = "Compliance Alert: New York BOH Restrictions";
+            alertDesc = `New York state law restricts tip pooling strictly to FOH employees in direct customer service roles. Back-of-house staff (cooks, dishwashers) are generally excluded from tip sharing.`;
+        }
+
+        // Show/hide banner
+        if (activeMems.length === 0) {
+            complianceAlert.style.display = 'none';
+            return;
+        }
+
+        complianceAlert.style.display = 'flex';
+        complianceAlert.className = `compliance-alert ${isCompliant ? 'success' : 'warning'}`;
+        complianceAlert.querySelector('.alert-title').innerHTML = alertTitle;
+        complianceAlert.querySelector('.alert-desc').innerHTML = alertDesc;
+        complianceAlert.querySelector('.alert-icon').innerHTML = isCompliant ? '✅' : '⚠️';
     }
 
     // ─── Auto Recalculate ───────────────────

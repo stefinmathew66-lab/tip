@@ -1,0 +1,42 @@
+{
+  "lastUpdated": "August 2026",
+  "source": "U.S. Department of Labor (DOL) Wage & Hour Division",
+  "disclaimer": "This tool provides general calculations and compliance alerts based on public rules, but does not constitute legal advice. Please consult an employment attorney or payroll specialist to verify compliance with your local laws.",
+  "states": {
+    "US": {
+      "name": "Federal (FLSA Baseline)",
+      "allowsTipCredit": true,
+      "bohRule": "no_tip_credit",
+      "managerRule": "never",
+      "notes": "Under federal FLSA rules, managers and supervisors can never participate in tip pools. Back-of-house (BOH) staff can only be included if the employer pays full minimum wage and takes NO tip credit."
+    },
+    "CA": {
+      "name": "California",
+      "allowsTipCredit": false,
+      "bohRule": "allowed",
+      "managerRule": "never",
+      "notes": "California strictly prohibits tip credits. Employers must pay full state minimum wage. Under CA Labor Code Section 351, BOH employees can be included in a tip pool if they are in the chain of service, but managers/agents are strictly excluded."
+    },
+    "TX": {
+      "name": "Texas",
+      "allowsTipCredit": true,
+      "bohRule": "no_tip_credit",
+      "managerRule": "never",
+      "notes": "Texas follows the federal FLSA baseline. BOH employees cannot participate in the tip pool if the employer claims a tip credit. Managers and supervisors cannot participate under any circumstances."
+    },
+    "NY": {
+      "name": "New York",
+      "allowsTipCredit": true,
+      "bohRule": "restricted",
+      "managerRule": "never",
+      "notes": "New York has strict FOH-only rules. BOH employees (cooks, dishwashers) cannot participate in a tip pool if a tip credit is claimed, and are generally restricted even without a tip credit unless they perform FOH-like direct customer-facing services. Managers are strictly excluded."
+    },
+    "FL": {
+      "name": "Florida",
+      "allowsTipCredit": true,
+      "bohRule": "no_tip_credit",
+      "managerRule": "never",
+      "notes": "Florida allows tip credits. BOH staff cannot participate in the tip pool if the employer claims a tip credit. Managers and supervisors can never participate."
+    }
+  }
+}
