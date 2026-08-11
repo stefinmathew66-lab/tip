@@ -1,0 +1,143 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+    title="Contact Us — TipSplit" 
+    description="Have feedback, suggestions, or found a bug? Reach out to the TipSplit team."
+>
+    <main class="app-container relative z-10 max-w-(--max-width) mx-auto px-4 py-6 sm:px-6 sm:py-10 pb-12">
+        <!-- Back Link -->
+        <a href="/" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M10 13L5 8l5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to Calculator
+        </a>
+
+        <!-- Content Card -->
+        <section class="card static-card bg-bg-card border border-border rounded-lg p-6 sm:p-8 static-content">
+            <h1>Contact Us</h1>
+            <p class="mb-6">Got suggestions for new features, found a calculation issue, or just want to say hi? We'd love to hear from you. Drop us a message below.</p>
+
+            <form id="contactForm" novalidate class="mt-4">
+                <div class="form-group">
+                    <label for="contactName">Full Name</label>
+                    <input 
+                        type="text" 
+                        id="contactName" 
+                        name="name" 
+                        placeholder="Your name…" 
+                        required
+                        autocomplete="name"
+                        class="w-full bg-bg-input border-1.5 border-border rounded-md py-3.5 px-4 text-text-primary text-sm font-medium transition-all duration-200 ease-(--ease-base) placeholder:text-text-muted focus:border-accent focus:shadow-[0_0_0_3px_var(--color-accent-soft)] focus:outline-none"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="contactEmail">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="contactEmail" 
+                        name="email" 
+                        placeholder="yourname@example.com…" 
+                        required
+                        autocomplete="email"
+                        class="w-full bg-bg-input border-1.5 border-border rounded-md py-3.5 px-4 text-text-primary text-sm font-medium transition-all duration-200 ease-(--ease-base) placeholder:text-text-muted focus:border-accent focus:shadow-[0_0_0_3px_var(--color-accent-soft)] focus:outline-none"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="contactMessage">Message</label>
+                    <textarea 
+                        id="contactMessage" 
+                        name="message" 
+                        placeholder="Type your message here…" 
+                        required
+                        class="w-full bg-bg-input border-1.5 border-border rounded-md py-3.5 px-4 text-text-primary text-sm font-medium transition-all duration-200 ease-(--ease-base) placeholder:text-text-muted focus:border-accent focus:shadow-[0_0_0_3px_var(--color-accent-soft)] focus:outline-none min-h-[140px]"
+                    ></textarea>
+                </div>
+
+                <button 
+                    type="submit" 
+                    class="calculate-btn flex items-center justify-center gap-2.5 w-full py-4 px-6 bg-accent-gradient border-none rounded-lg text-text-on-accent text-[1rem] font-bold cursor-pointer transition-all duration-250 ease-(--ease-base) shadow-[0_4px_20px_rgba(240,165,0,0.25)] hover:-translate-y-0.5 hover:shadow-[0_6px_28px_rgba(240,165,0,0.35)] active:scale-[0.98] relative overflow-hidden mt-6"
+                >
+                    Send Message
+                </button>
+            </form>
+        </section>
+
+        <!-- Toast notification -->
+        <div class="toast" id="toast" role="status" aria-live="polite">Message sent successfully!</div>
+
+        <!-- Footer -->
+        <footer class="footer text-center mt-8 pt-5">
+            <p class="text-text-muted text-[0.78rem]">TipSplit · Fair tips, zero drama.</p>
+        </footer>
+    </main>
+</Layout>
+
+<script>
+    const form = document.getElementById('contactForm') as HTMLFormElement;
+    const toast = document.getElementById('toast');
+
+    if (form && toast) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Basic Validation
+            const nameInput = document.getElementById('contactName') as HTMLInputElement;
+            const emailInput = document.getElementById('contactEmail') as HTMLInputElement;
+            const messageInput = document.getElementById('contactMessage') as HTMLTextAreaElement;
+
+            let hasError = false;
+
+            [nameInput, emailInput, messageInput].forEach(input => {
+                if (!input.value.trim()) {
+                    input.classList.add('input-error');
+                    hasError = true;
+                } else {
+                    input.classList.remove('input-error');
+                }
+            });
+
+            // Email format check
+            if (emailInput.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) {
+                emailInput.classList.add('input-error');
+                hasError = true;
+            }
+
+            if (hasError) {
+                // Shake fields with error
+                toast.textContent = "Please fill out all fields correctly.";
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+                return;
+            }
+
+            // Success simulation
+            toast.textContent = "Thank you! Your message has been sent.";
+            toast.classList.add('show');
+            form.reset();
+
+            // Remove error outlines
+            [nameInput, emailInput, messageInput].forEach(input => {
+                input.classList.remove('input-error');
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        });
+
+        // Dynamic cleanup of error class on input
+        form.querySelectorAll('input, textarea').forEach(el => {
+            el.addEventListener('input', (e) => {
+                const target = e.target as HTMLElement;
+                target.classList.remove('input-error');
+            });
+        });
+    }
+</script>

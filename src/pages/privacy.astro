@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+    title="Privacy Policy — TipSplit" 
+    description="Your privacy matters. Learn how TipSplit processes your calculations locally in your browser with zero data collection."
+>
+    <main class="app-container relative z-10 max-w-(--max-width) mx-auto px-4 py-6 sm:px-6 sm:py-10 pb-12">
+        <!-- Back Link -->
+        <a href="/" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M10 13L5 8l5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to Calculator
+        </a>
+
+        <!-- Content Card -->
+        <section class="card static-card bg-bg-card border border-border rounded-lg p-6 sm:p-8 static-content">
+            <h1>Privacy Policy</h1>
+            <p>Last updated: August 11, 2026</p>
+            
+            <p>At TipSplit, we believe your financial data and team details are your business. This privacy policy describes how we handle information on our website.</p>
+
+            <h2>1. Zero Server-Side Data Collection</h2>
+            <p>TipSplit is designed as a client-side utility. All computations, calculations, and inputs are processed locally in your web browser. <strong>We do not collect, store, or transmit any data</strong> you enter into the calculator—including total tips, team member names, hours worked, role points, or calculated distributions—to any server.</p>
+
+            <h2>2. Browser Storage</h2>
+            <p>We may use local browser storage (such as LocalStorage or SessionStorage) to preserve your preferences (like the chosen split method or current team list) so that you don't lose your work if you refresh the page. This data remains on your machine and is never sent to our servers.</p>
+
+            <h2>3. No Cookies or Trackers</h2>
+            <p>This website does not use cookies, advertising trackers, or marketing analytics. We do not track your behavior across other sites or profile your usage.</p>
+
+            <h2>4. Third-Party Hosting</h2>
+            <p>This website is hosted on static hosting services. The hosting provider may log basic technical requests (like IP addresses, browser user-agents, and requesting URLs) to ensure security and monitor server health. These logs are managed by the host and are not connected to your calculator inputs.</p>
+
+            <h2>5. Changes to This Policy</h2>
+            <p>We may update this policy from time to time. Any changes will be posted on this page with an updated "Last updated" date. Since we do not collect user contact information, we encourage you to review this page periodically.</p>
+
+            <h2>6. Contact Us</h2>
+            <p>If you have any questions or feedback about our privacy practices, please visit our <a href="/contact" class="text-accent hover:underline">Contact Us</a> page.</p>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer text-center mt-8 pt-5">
+            <p class="text-text-muted text-[0.78rem]">TipSplit · Fair tips, zero drama.</p>
+        </footer>
+    </main>
+</Layout>

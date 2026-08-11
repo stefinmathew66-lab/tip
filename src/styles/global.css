@@ -392,6 +392,114 @@
   font-variant-numeric: tabular-nums;
 }
 
+
+/* ============================================
+   Static Content Pages (Privacy, Terms, Contact)
+   ============================================ */
+.static-card {
+  animation: slideIn 0.3s var(--ease-base);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s var(--ease-base);
+  margin-bottom: 24px;
+}
+
+.back-link:hover {
+  color: var(--color-accent);
+}
+
+.static-content h1 {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.static-content h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-top: 28px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 6px;
+}
+
+.static-content p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin-bottom: 16px;
+}
+
+.static-content ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 20px;
+}
+
+.static-content li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin-bottom: 10px;
+}
+
+.static-content li::before {
+  content: "•";
+  position: absolute;
+  left: 4px;
+  color: var(--color-accent);
+  font-weight: bold;
+}
+
+/* Contact Form Specific Styling */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group textarea {
+  width: 100%;
+  min-height: 120px;
+  font-size: 0.88rem;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-primary);
+  border: 1.5px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-weight: 500;
+  resize: vertical;
+  transition: all 0.2s var(--ease-base);
+}
+
+.form-group textarea:focus-visible {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+  outline: none;
+}
+
 /* ============================================
    Print Styles
    ============================================ */
