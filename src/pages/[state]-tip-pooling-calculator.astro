@@ -33,6 +33,7 @@ const faqSchema = {
     title={stateData.seoTitle}
     description={stateData.seoDescription}
     keywords={`tip pooling calculator ${stateData.name.toLowerCase()}, ${stateData.name.toLowerCase()} tip pooling, tip pooling ${stateData.name.toLowerCase()}, free tip pooling calculator`}
+    faqSchema={faqSchema}
 >
     <!-- Skip link for keyboard users -->
     <a href="#step1" class="skip-link absolute left-[-9999px] top-2 z-50 bg-accent text-bg-primary px-4 py-2 rounded-sm text-xs font-semibold no-underline focus:left-4">Skip to calculator</a>
@@ -310,9 +311,6 @@ const faqSchema = {
         </footer>
     </main>
 </Layout>
-
-<!-- FAQ JSON-LD Schema for SEO -->
-<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
 <script>
     import '../scripts/calculator.js';

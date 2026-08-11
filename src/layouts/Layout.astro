@@ -6,13 +6,15 @@ interface Props {
 	description?: string;
 	keywords?: string;
 	ogImage?: string;
+	faqSchema?: object;
 }
 
 const { 
 	title = "TipSplit — Fair Tip Pooling Calculator", 
 	description = "Free tip pooling calculator for restaurants. Split tips by equal share, hours worked, or role-based points. Transparent, fast, and compliant.",
 	keywords = "tip pooling calculator, tip pooling, tip pooling calculator app, tip pooling calculator free, free tip pooling calculator",
-	ogImage = "/og-image.png"
+	ogImage = "/og-image.png",
+	faqSchema
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || Astro.url.origin);
@@ -50,6 +52,11 @@ const ogImageURL = new URL(ogImage, Astro.site || Astro.url.origin);
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+		<!-- FAQ JSON-LD Schema for SEO -->
+		{faqSchema && (
+			<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+		)}
 	</head>
 	<body>
 		<slot />
