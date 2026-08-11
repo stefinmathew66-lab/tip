@@ -97,6 +97,19 @@
     function init() {
         if (!totalTipsInput) return; // Guard for Astro pages if script is loaded globally
 
+        // Force state pre-selection based on current URL path
+        if (stateSelect) {
+            const pathMap = {
+                '/california-tip-pooling-calculator': 'CA',
+                '/texas-tip-pooling-calculator': 'TX',
+                '/new-york-tip-pooling-calculator': 'NY',
+                '/florida-tip-pooling-calculator': 'FL'
+            };
+            const currentPath = window.location.pathname.replace(/\/$/, '');
+            const matchingState = pathMap[currentPath] || 'US';
+            stateSelect.value = matchingState;
+        }
+
         const hasSavedState = loadAppState();
 
         if (!hasSavedState) {
