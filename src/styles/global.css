@@ -1,0 +1,445 @@
+@import "tailwindcss";
+
+@theme {
+  --max-width: 640px;
+  --color-bg-primary: #0c0f14;
+  --color-bg-secondary: #13161d;
+  --color-bg-card: #181c25;
+  --color-bg-card-hover: #1e2230;
+  --color-bg-input: #10131a;
+  
+  --color-border: #262c3a;
+  --color-border-focus: #fbbf24;
+
+  /* Premium Gold Theme */
+  --color-accent: #f0a500;
+  --color-accent-soft: rgba(240, 165, 0, 0.12);
+  --color-accent-glow: rgba(240, 165, 0, 0.25);
+  --background-image-accent-gradient: linear-gradient(135deg, #f0a500 0%, #e65c00 100%);
+
+  /* Success/Neutral/Danger */
+  --color-green: #34d399;
+  --color-green-soft: rgba(52, 211, 153, 0.1);
+  --color-green-glow: rgba(52, 211, 153, 0.25);
+  
+  --color-red: #f87171;
+  --color-red-soft: rgba(248, 113, 113, 0.1);
+
+  /* Typography Colors */
+  --color-text-primary: #eaf0ff;
+  --color-text-secondary: #8892a8;
+  --color-text-muted: #5a6378;
+  --color-text-on-accent: #0c0f14; /* High contrast dark text on gold */
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  /* Custom timing function */
+  --ease-base: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   Base Defaults & Glow Background
+   ============================================ */
+@layer base {
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 50% -20%, rgba(240, 165, 0, 0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(230, 92, 0, 0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* ============================================
+   Keyframes & Animations
+   ============================================ */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes resultsAppear {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* ============================================
+   Component Styles for JS-Rendered DOM Elements
+   ============================================ */
+@utility team-member {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  animation: slideIn 0.25s var(--ease-base);
+}
+
+@utility member-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+@utility member-fields {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+
+  & input {
+    font-size: 0.88rem;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-primary);
+    border: 1.5px solid var(--color-border);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-weight: 500;
+    width: 100%;
+
+    &:focus-visible {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px var(--color-accent-soft);
+      outline: none;
+    }
+
+    &.member-name {
+      flex: 1;
+      min-width: 120px;
+      width: auto;
+    }
+
+    &.member-hours {
+      width: 85px;
+      flex-shrink: 0;
+    }
+
+    &.member-points {
+      width: 85px;
+      flex-shrink: 0;
+    }
+
+    &.member-role {
+      width: 120px;
+      flex-shrink: 0;
+    }
+  }
+}
+
+@utility remove-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s var(--ease-base);
+  flex-shrink: 0;
+
+  &:hover {
+    background: var(--color-red-soft);
+    border-color: rgba(248, 113, 113, 0.2);
+    color: var(--color-red);
+  }
+}
+
+@utility input-error {
+  border-color: var(--color-red) !important;
+  box-shadow: 0 0 0 3px var(--color-red-soft) !important;
+  animation: shake 0.4s var(--ease-base);
+}
+
+@utility error-msg {
+  color: var(--color-red);
+  font-size: 0.78rem;
+  margin-top: 6px;
+  font-weight: 500;
+  animation: slideIn 0.2s var(--ease-base);
+}
+
+@utility toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(240, 165, 0, 0.3);
+  opacity: 0;
+  transition: all 0.3s var(--ease-base);
+  z-index: 1000;
+  pointer-events: none;
+
+  &.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ============================================
+   Method Selector & Presets
+   ============================================ */
+@utility method-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 8px;
+  background: var(--color-bg-input);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-base);
+  color: var(--color-text-primary);
+  font-family: inherit;
+
+  &:hover {
+    border-color: var(--color-accent);
+    background: var(--color-bg-card-hover);
+  }
+
+  &.active {
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
+    box-shadow: 0 0 0 3px rgba(240, 165, 0, 0.08);
+  }
+}
+
+@utility preset-chip {
+  padding: 6px 12px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  color: var(--color-text-primary);
+  font-size: 0.78rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s var(--ease-base);
+  white-space: nowrap;
+
+  &:hover {
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Tabular figures custom helper */
+@utility tab-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================
+   Custom Scrollbar
+   ============================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ============================================
+   Results Summary & Table
+   ============================================ */
+.results-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.summary-stat {
+  padding: 14px;
+  background: var(--color-bg-input);
+  border-radius: var(--radius-md);
+  text-align: center;
+  border: 1px solid var(--color-border);
+}
+
+.summary-stat .stat-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-green);
+  margin-bottom: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary-stat .stat-label {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.results-table-wrap {
+  overflow-x: auto;
+  margin: 0 -8px;
+  padding: 0 8px;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.results-table th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.results-table td {
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(38, 44, 58, 0.5);
+}
+
+.results-table tr:last-child td {
+  border-bottom: none;
+}
+
+.results-table .tip-amount {
+  font-weight: 700;
+  color: var(--color-green);
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.results-table .pct-col {
+  color: var(--color-text-secondary);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  body::before { display: none !important; }
+
+  .app-container {
+    max-width: 100% !important;
+    padding: 16px !important;
+  }
+
+  /* Hide input sections, calculations trigger, action buttons, and footer on print */
+  header, section[id="step1"], section[id="step2"], section[id="step3"], button[id="calculateBtn"], .results-actions, footer, .toast {
+    display: none !important;
+  }
+
+  section[id="resultsCard"] {
+    display: block !important;
+    border: 2px solid #333 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    animation: none !important;
+  }
+
+  section[id="resultsCard"] * {
+    color: #000 !important;
+  }
+
+  .summary-stat {
+    background: #f5f5f5 !important;
+    border-color: #ccc !important;
+  }
+
+  .results-table th {
+    color: #555 !important;
+    border-bottom-color: #333 !important;
+  }
+
+  .results-table td {
+    border-bottom-color: #ddd !important;
+  }
+
+  .results-table .tip-amount {
+    color: #000 !important;
+    font-weight: 800 !important;
+  }
+}

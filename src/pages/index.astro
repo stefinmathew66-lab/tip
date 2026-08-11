@@ -1,0 +1,165 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+    <!-- Skip link for keyboard users -->
+    <a href="#step1" class="skip-link absolute left-[-9999px] top-2 z-50 bg-accent text-bg-primary px-4 py-2 rounded-sm text-xs font-semibold no-underline focus:left-4">Skip to calculator</a>
+
+    <main class="app-container relative z-10 max-w-(--max-width) mx-auto px-4 py-6 sm:px-6 sm:py-10 pb-12">
+        <!-- Header -->
+        <header class="header text-center mb-8">
+            <div class="logo flex items-center justify-center gap-2 mb-2">
+                <div class="logo-icon text-accent flex drop-shadow-[0_0_8px_var(--color-accent-glow)]" aria-hidden="true">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                        <circle cx="14" cy="14" r="13" stroke="currentColor" stroke-width="2"/>
+                        <text x="14" y="19" text-anchor="middle" fill="currentColor" font-size="16" font-weight="700">$</text>
+                    </svg>
+                </div>
+                <span class="logo-text text-3xl font-extrabold bg-accent-gradient bg-clip-text text-transparent tracking-tight">TipSplit</span>
+            </div>
+            <p class="tagline text-text-secondary text-sm font-normal">Fair tips, zero drama.</p>
+        </header>
+
+        <!-- Step 1: Total Tips -->
+        <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="step1" aria-labelledby="step1-heading">
+            <div class="step-header flex items-center gap-3 mb-1.5">
+                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">1</span>
+                <h1 id="step1-heading" class="text-lg font-bold text-text-primary text-balance">Total Tips</h1>
+            </div>
+            <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Enter the total tip amount to be split among the team.</p>
+            <div class="input-group currency-input relative">
+                <label for="totalTips" class="sr-only">Total tip amount in dollars</label>
+                <span class="currency-symbol absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary text-lg font-semibold pointer-events-none z-10" aria-hidden="true">$</span>
+                <input type="number" id="totalTips" name="totalTips" placeholder="0.00…" min="0" step="0.01" inputmode="decimal" autocomplete="off" spellcheck="false" class="w-full bg-bg-input border-1.5 border-border rounded-md py-3.5 pl-9 pr-4 text-text-primary text-lg font-medium transition-all duration-200 ease-(--ease-base) placeholder:text-text-muted placeholder:font-normal focus:border-accent focus:shadow-[0_0_0_3px_var(--color-accent-soft)] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+            </div>
+        </section>
+
+        <!-- Step 2: Split Method -->
+        <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="step2" aria-labelledby="step2-heading">
+            <div class="step-header flex items-center gap-3 mb-1.5">
+                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">2</span>
+                <h2 id="step2-heading" class="text-lg font-bold text-text-primary text-balance">Split Method</h2>
+            </div>
+            <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Choose how tips should be divided.</p>
+            <div class="method-selector grid grid-cols-3 gap-2.5 max-sm:grid-cols-1 max-sm:gap-2" role="radiogroup" aria-label="Tip split method">
+                <button class="method-btn active" data-method="equal" id="methodEqual" role="radio" aria-checked="true">
+                    <div class="method-icon text-2xl leading-none" aria-hidden="true">⚖️</div>
+                    <div class="method-label text-[0.82rem] font-semibold text-center">Equal Split</div>
+                    <div class="method-sub text-[0.7rem] text-text-muted text-center">Same share for everyone</div>
+                </button>
+                <button class="method-btn" data-method="hours" id="methodHours" role="radio" aria-checked="false" tabindex="-1">
+                    <div class="method-icon text-2xl leading-none" aria-hidden="true">⏱️</div>
+                    <div class="method-label text-[0.82rem] font-semibold text-center">By Hours</div>
+                    <div class="method-sub text-[0.7rem] text-text-muted text-center">Based on time worked</div>
+                </button>
+                <button class="method-btn" data-method="points" id="methodPoints" role="radio" aria-checked="false" tabindex="-1">
+                    <div class="method-icon text-2xl leading-none" aria-hidden="true">⭐</div>
+                    <div class="method-label text-[0.82rem] font-semibold text-center">By Role Points</div>
+                    <div class="method-sub text-[0.7rem] text-text-muted text-center">Weighted by position</div>
+                </button>
+            </div>
+        </section>
+
+        <!-- Step 3: Team Members -->
+        <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="step3" aria-labelledby="step3-heading">
+            <div class="step-header flex items-center gap-3 mb-1.5">
+                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">3</span>
+                <h2 id="step3-heading" class="text-lg font-bold text-text-primary text-balance">Team Members</h2>
+            </div>
+            <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Add everyone who&rsquo;s in the tip pool today.</p>
+
+            <!-- Role presets (only visible in points mode) -->
+            <div class="role-presets mb-4 p-3.5 bg-accent-soft rounded-md border border-[rgba(240,165,0,0.1)]" id="rolePresets" style="display:none;">
+                <p class="presets-label text-[0.8rem] text-text-secondary mb-2.5 font-medium">Quick add by role:</p>
+                <div class="preset-chips flex flex-wrap gap-1.5">
+                    <button class="preset-chip" data-role="Server" data-points="10">🍽️ Server (10&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Bartender" data-points="8">🍸 Bartender (8&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Busser" data-points="5">🧹 Busser (5&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Host" data-points="4">👋 Host (4&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Food Runner" data-points="6">🏃 Runner (6&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Barback" data-points="4">🧊 Barback (4&nbsp;pts)</button>
+                </div>
+            </div>
+
+            <!-- Team list -->
+            <div class="team-list flex flex-col gap-2 mb-3" id="teamList" role="list" aria-label="Team members">
+                <!-- Team members will be rendered here -->
+            </div>
+
+            <button class="add-btn flex items-center justify-center gap-2 w-full p-3 bg-transparent border-1.5 border-dashed border-border rounded-md text-text-secondary text-sm font-medium cursor-pointer transition-all duration-200 ease-(--ease-base) hover:border-accent hover:text-accent hover:bg-accent-soft" id="addMemberBtn">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                    <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Add Team Member
+            </button>
+        </section>
+
+        <!-- Calculate Button -->
+        <button class="calculate-btn flex items-center justify-center gap-2.5 w-full py-4 px-6 bg-accent-gradient border-none rounded-lg text-text-on-accent text-[1.05rem] font-bold cursor-pointer mb-4 transition-all duration-250 ease-(--ease-base) shadow-[0_4px_20px_rgba(240,165,0,0.25)] hover:-translate-y-0.5 hover:shadow-[0_6px_28px_rgba(240,165,0,0.35)] active:scale-[0.98] relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-br after:from-[rgba(255,255,255,0.1)] after:to-transparent after:pointer-events-none" id="calculateBtn">
+            Calculate Tips
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+
+        <!-- Results -->
+        <section class="card results-card bg-gradient-to-br from-bg-card to-[rgba(52,211,153,0.03)] border-green rounded-lg p-6 mb-4 transition-all duration-200 ease-(--ease-base) hover:border-[rgba(52,211,153,0.2)]" id="resultsCard" style="display:none;" aria-labelledby="results-heading">
+            <div class="results-header flex items-center justify-between mb-5 flex-wrap gap-3">
+                <h2 id="results-heading" class="text-[1.15rem] font-bold text-text-primary"><span aria-hidden="true">💰</span> Tip Breakdown</h2>
+                <div class="results-actions flex gap-2">
+                    <button class="action-btn flex items-center gap-1 py-1.5 px-3 bg-bg-input border border-border rounded-sm text-text-secondary text-[0.78rem] font-medium cursor-pointer transition-all duration-150 ease-(--ease-base) hover:border-accent hover:text-accent" id="copyBtn" aria-label="Copy results to clipboard">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                        Copy
+                    </button>
+                    <button class="action-btn flex items-center gap-1 py-1.5 px-3 bg-bg-input border border-border rounded-sm text-text-secondary text-[0.78rem] font-medium cursor-pointer transition-all duration-150 ease-(--ease-base) hover:border-accent hover:text-accent" id="printBtn" aria-label="Print results">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <rect x="4" y="10" width="8" height="4" rx="0.5" stroke="currentColor" stroke-width="1.5"/>
+                            <rect x="2" y="5" width="12" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M4 5V2.5A.5.5 0 014.5 2h7a.5.5 0 01.5.5V5" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                        Print
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-summary grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2.5 mb-5" id="resultsSummary">
+                <!-- Summary stats -->
+            </div>
+
+            <div class="results-table-wrap overflow-x-auto mx-[-8px] px-2">
+                <table class="results-table w-full border-collapse" id="resultsTable">
+                    <thead>
+                        <tr id="resultsTableHead">
+                            <!-- Table head rendered by JS -->
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody">
+                        <!-- Table body rendered by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="results-footer mt-4 pt-4 border-t border-border">
+                <p class="transparency-note text-[0.8rem] text-text-secondary leading-relaxed">
+                    <span aria-hidden="true">🔍</span> <strong>Transparency note:</strong> <span id="methodExplanation"></span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Toast notification — aria-live for async updates -->
+        <div class="toast" id="toast" role="status" aria-live="polite">Copied to clipboard!</div>
+
+        <!-- Footer -->
+        <footer class="footer text-center mt-8 pt-5">
+            <p class="text-text-muted text-[0.78rem]">100% free · No sign-up · Your data stays in your browser</p>
+        </footer>
+    </main>
+</Layout>
+
+<script>
+    import '../scripts/calculator.js';
+</script>
