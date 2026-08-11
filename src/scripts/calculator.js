@@ -65,7 +65,7 @@
     const resultsSummary = document.getElementById('resultsSummary');
     const resultsTableHead = document.getElementById('resultsTableHead');
     const resultsTableBody = document.getElementById('resultsTableBody');
-    const methodExplanation = document.getElementById('methodExplanation');
+    const transparencyNote = document.getElementById('transparencyNote');
     const copyBtn = document.getElementById('copyBtn');
     const printBtn = document.getElementById('printBtn');
     const pdfBtn = document.getElementById('pdfBtn');
@@ -648,10 +648,13 @@
         // Method explanation
         const explanations = {
             equal: `Equally divided $${totalTips.toFixed(2)} among ${results.length} people — $${avgTip.toFixed(2)} each.`,
-            hours: `Distributed $${totalTips.toFixed(2)} proportionally by hours worked. Each hour earned $${(totalTips / results.reduce((s, r) => s + r.hours, 0)).toFixed(2)}.`,
-            points: `Distributed $${totalTips.toFixed(2)} based on role points. Each point was worth $${(totalTips / results.reduce((s, r) => s + r.points, 0)).toFixed(2)}.`
+            hours: `Distributed $${totalTips.toFixed(2)} proportionally by hours worked. Each hour earned $${(totalTips / results.reduce((s, r) => s + (r.hours || 0), 0)).toFixed(2)}.`,
+            points: `Distributed $${totalTips.toFixed(2)} based on role points. Each point was worth $${(totalTips / results.reduce((s, r) => s + (r.points || 0), 0)).toFixed(2)}.`
         };
-        methodExplanation.textContent = explanations[currentMethod];
+        if (transparencyNote) {
+            transparencyNote.innerHTML = `🔍 <strong>Transparency note:</strong> ${explanations[currentMethod]}`;
+            transparencyNote.style.display = 'block';
+        }
 
         // Show results
         resultsCard.style.display = 'block';
