@@ -72,44 +72,10 @@ import Layout from '../layouts/Layout.astro';
             </div>
         </section>
 
-        <!-- Step 3: Team Members -->
-        <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="step3" aria-labelledby="step3-heading">
-            <div class="step-header flex items-center gap-3 mb-1.5">
-                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">3</span>
-                <h2 id="step3-heading" class="text-lg font-bold text-text-primary text-balance">Team Members</h2>
-            </div>
-            <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Add everyone who&rsquo;s in the tip pool today.</p>
-
-            <!-- Role presets (only visible in points mode) -->
-            <div class="role-presets mb-4 p-3.5 bg-accent-soft rounded-md border border-[rgba(240,165,0,0.1)]" id="rolePresets" style="display:none;">
-                <p class="presets-label text-[0.8rem] text-text-secondary mb-2.5 font-medium">Quick add by role:</p>
-                <div class="preset-chips flex flex-wrap gap-1.5">
-                    <button class="preset-chip" data-role="Server" data-points="10">🍽️ Server (10&nbsp;pts)</button>
-                    <button class="preset-chip" data-role="Bartender" data-points="8">🍸 Bartender (8&nbsp;pts)</button>
-                    <button class="preset-chip" data-role="Busser" data-points="5">🧹 Busser (5&nbsp;pts)</button>
-                    <button class="preset-chip" data-role="Host" data-points="4">👋 Host (4&nbsp;pts)</button>
-                    <button class="preset-chip" data-role="Food Runner" data-points="6">🏃 Runner (6&nbsp;pts)</button>
-                    <button class="preset-chip" data-role="Barback" data-points="4">🧊 Barback (4&nbsp;pts)</button>
-                </div>
-            </div>
-
-            <!-- Team list -->
-            <div class="team-list flex flex-col gap-2 mb-3" id="teamList" role="list" aria-label="Team members">
-                <!-- Team members will be rendered here -->
-            </div>
-
-            <button class="add-btn flex items-center justify-center gap-2 w-full p-3 bg-transparent border-1.5 border-dashed border-border rounded-md text-text-secondary text-sm font-medium cursor-pointer transition-all duration-200 ease-(--ease-base) hover:border-accent hover:text-accent hover:bg-accent-soft" id="addMemberBtn">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                    <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                Add Team Member
-            </button>
-        </section>
-
-        <!-- Step 4: Compliance Rules -->
+        <!-- Step 3: Compliance Rules -->
         <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="stepCompliance" aria-labelledby="compliance-heading">
             <div class="step-header flex items-center gap-3 mb-1.5">
-                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">4</span>
+                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">3</span>
                 <h2 id="compliance-heading" class="text-lg font-bold text-text-primary text-balance">Compliance Rules</h2>
             </div>
             <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Select state and wage setup to check tip pool compliance.</p>
@@ -138,6 +104,40 @@ import Layout from '../layouts/Layout.astro';
             <div class="legal-source-disclaimer mt-4 pt-3.5 border-t border-border/40 text-[0.68rem] text-text-muted leading-relaxed pl-10">
                 <span>⚖️ <strong>Legal Disclaimer:</strong> Tip pooling regulations are highly complex and differ by state and local jurisdiction. This tool calculates shares based on user inputs and public rules current as of <strong>August 2026</strong> (source: U.S. Department of Labor). This does not constitute legal advice. Please consult an employment attorney or payroll expert to verify compliance.</span>
             </div>
+        </section>
+
+        <!-- Step 4: Team Members -->
+        <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="step3" aria-labelledby="step3-heading">
+            <div class="step-header flex items-center gap-3 mb-1.5">
+                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">4</span>
+                <h2 id="step3-heading" class="text-lg font-bold text-text-primary text-balance">Team Members</h2>
+            </div>
+            <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Add everyone who&rsquo;s in the tip pool today.</p>
+
+            <!-- Role presets (only visible in points mode) -->
+            <div class="role-presets mb-4 p-3.5 bg-accent-soft rounded-md border border-[rgba(240,165,0,0.1)]" id="rolePresets" style="display:none;">
+                <p class="presets-label text-[0.8rem] text-text-secondary mb-2.5 font-medium">Quick add by role:</p>
+                <div class="preset-chips flex flex-wrap gap-1.5">
+                    <button class="preset-chip" data-role="Server" data-points="10">🍽️ Server (10&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Bartender" data-points="8">🍸 Bartender (8&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Busser" data-points="5">🧹 Busser (5&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Host" data-points="4">👋 Host (4&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Food Runner" data-points="6">🏃 Runner (6&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Barback" data-points="4">🧊 Barback (4&nbsp;pts)</button>
+                </div>
+            </div>
+
+            <!-- Team list -->
+            <div class="team-list flex flex-col gap-2 mb-3" id="teamList" role="list" aria-label="Team members">
+                <!-- Team members will be rendered here -->
+            </div>
+
+            <button class="add-btn flex items-center justify-center gap-2 w-full p-3 bg-transparent border-1.5 border-dashed border-border rounded-md text-text-secondary text-sm font-medium cursor-pointer transition-all duration-200 ease-(--ease-base) hover:border-accent hover:text-accent hover:bg-accent-soft" id="addMemberBtn">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                    <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Add Team Member
+            </button>
         </section>
 
         <!-- Compliance Status Banner -->
