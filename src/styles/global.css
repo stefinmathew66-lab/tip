@@ -934,6 +934,16 @@
   letter-spacing: 0.2px;
 }
 
+.trust-badge-emoji {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  line-height: 1;
+  transform: translateY(-0.5px);
+  user-select: none;
+}
+
 .audit-log-section {
   margin-top: 24px;
   padding-top: 20px;

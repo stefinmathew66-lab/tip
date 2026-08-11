@@ -26,13 +26,13 @@ import Layout from '../layouts/Layout.astro';
             <div class="flex items-center justify-center flex-wrap gap-x-3 gap-y-1.5 mt-4 text-[0.78rem] uppercase tracking-wider font-extrabold text-text-primary">
                 <span class="text-text-secondary">State Rules:</span>
                 <a href="/" class="text-text-primary hover:text-accent transition-colors duration-150 no-underline font-extrabold">FLSA Baseline</a>
-                <span class="w-1.5 h-1.5 rounded-full bg-border/60" aria-hidden="true"></span>
+                <span class="w-1 h-1 rounded-full bg-border/50" aria-hidden="true"></span>
                 <a href="/california-tip-pooling-calculator" class="text-text-primary hover:text-accent transition-colors duration-150 no-underline font-extrabold">California</a>
-                <span class="w-1.5 h-1.5 rounded-full bg-border/60" aria-hidden="true"></span>
+                <span class="w-1 h-1 rounded-full bg-border/50" aria-hidden="true"></span>
                 <a href="/texas-tip-pooling-calculator" class="text-text-primary hover:text-accent transition-colors duration-150 no-underline font-extrabold">Texas</a>
-                <span class="w-1.5 h-1.5 rounded-full bg-border/60" aria-hidden="true"></span>
+                <span class="w-1 h-1 rounded-full bg-border/50" aria-hidden="true"></span>
                 <a href="/new-york-tip-pooling-calculator" class="text-text-primary hover:text-accent transition-colors duration-150 no-underline font-extrabold">New York</a>
-                <span class="w-1.5 h-1.5 rounded-full bg-border/60" aria-hidden="true"></span>
+                <span class="w-1 h-1 rounded-full bg-border/50" aria-hidden="true"></span>
                 <a href="/florida-tip-pooling-calculator" class="text-text-primary hover:text-accent transition-colors duration-150 no-underline font-extrabold">Florida</a>
             </div>
             <nav class="flex items-center justify-center gap-3.5 mt-3 text-[0.7rem] font-medium text-text-muted">
@@ -49,19 +49,19 @@ import Layout from '../layouts/Layout.astro';
         <!-- Privacy & Trust Guarantee Banner -->
         <div class="trust-badge-banner" role="region" aria-label="Privacy & Trust Guarantee">
             <span class="trust-badge-item" title="No database or server uploads. Your calculations, rosters, and payouts stay 100% local to this browser.">
-                🔒 <span>100% Local & Private</span>
+                <span class="trust-badge-emoji" aria-hidden="true">🔒</span> <span>100% Local & Private</span>
             </span>
-            <span class="w-1.5 h-1.5 rounded-full bg-border/40 max-sm:hidden" aria-hidden="true"></span>
+            <span class="w-1 h-1 rounded-full bg-border/50 max-sm:hidden" aria-hidden="true"></span>
             <span class="trust-badge-item" title="No email, credit card, or registration required. Zero tracking cookies or marketing scripts.">
-                📂 <span>No Sign-Up or Tracking</span>
+                <span class="trust-badge-emoji" aria-hidden="true">📂</span> <span>No Sign-Up or Tracking</span>
             </span>
-            <span class="w-1.5 h-1.5 rounded-full bg-border/40 max-sm:hidden" aria-hidden="true"></span>
+            <span class="w-1 h-1 rounded-full bg-border/50 max-sm:hidden" aria-hidden="true"></span>
             <span class="trust-badge-item" title="Generates a step-by-step arithmetic breakdown so managers and staff have a transparent audit trail.">
-                🧮 <span>IRS Audit-Proof Math</span>
+                <span class="trust-badge-emoji" aria-hidden="true">🧮</span> <span>IRS Audit-Proof Math</span>
             </span>
-            <span class="w-1.5 h-1.5 rounded-full bg-border/40 max-sm:hidden" aria-hidden="true"></span>
+            <span class="w-1 h-1 rounded-full bg-border/50 max-sm:hidden" aria-hidden="true"></span>
             <span class="trust-badge-item" title="No Wi-Fi in the back office? Doesn't matter. Coded to work 100% offline via Service Worker caching.">
-                🌐 <span>100% Offline Capability</span>
+                <span class="trust-badge-emoji" aria-hidden="true">🌐</span> <span>100% Offline Capability</span>
             </span>
         </div>
 
@@ -73,10 +73,12 @@ import Layout from '../layouts/Layout.astro';
                 <h1 id="step1-heading" class="text-lg font-bold text-text-primary text-balance">Total Tips</h1>
             </div>
             <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Enter the total tip amount to be split among the team.</p>
-            <div class="input-group currency-input relative">
-                <label for="totalTips" class="sr-only">Total tip amount in dollars</label>
-                <span class="currency-symbol absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary text-lg font-semibold pointer-events-none z-10" aria-hidden="true">$</span>
-                <input type="number" id="totalTips" name="totalTips" placeholder="0.00…" min="0" step="0.01" inputmode="decimal" autocomplete="off" spellcheck="false" class="w-full bg-bg-input border-1.5 border-border rounded-md py-3.5 pl-9 pr-4 text-text-primary text-lg font-medium transition-all duration-200 ease-(--ease-base) placeholder:text-text-muted placeholder:font-normal focus:border-accent focus:shadow-[0_0_0_3px_var(--color-accent-soft)] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+            <div class="pl-10">
+                <div class="input-group currency-input relative">
+                    <label for="totalTips" class="sr-only">Total tip amount in dollars</label>
+                    <span class="currency-symbol absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary text-lg font-semibold pointer-events-none z-10" aria-hidden="true">$</span>
+                    <input type="number" id="totalTips" name="totalTips" placeholder="0.00…" min="0" step="0.01" inputmode="decimal" autocomplete="off" spellcheck="false" class="w-full bg-bg-input border-1.5 border-border rounded-md py-3.5 pl-9 pr-4 text-text-primary text-lg font-medium transition-all duration-200 ease-(--ease-base) placeholder:text-text-muted placeholder:font-normal focus:border-accent focus:shadow-[0_0_0_3px_var(--color-accent-soft)] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                </div>
             </div>
         </section>
 
@@ -87,22 +89,24 @@ import Layout from '../layouts/Layout.astro';
                 <h2 id="step2-heading" class="text-lg font-bold text-text-primary text-balance">Split Method</h2>
             </div>
             <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Choose how tips should be divided.</p>
-            <div class="method-selector grid grid-cols-3 gap-2.5 max-sm:grid-cols-1 max-sm:gap-2" role="radiogroup" aria-label="Tip split method">
-                <button class="method-btn active" data-method="equal" id="methodEqual" role="radio" aria-checked="true">
-                    <div class="method-icon text-2xl leading-none" aria-hidden="true">⚖️</div>
-                    <div class="method-label text-[0.82rem] font-semibold text-center">Equal Split</div>
-                    <div class="method-sub text-[0.7rem] text-text-muted text-center">Same share for everyone</div>
-                </button>
-                <button class="method-btn" data-method="hours" id="methodHours" role="radio" aria-checked="false" tabindex="-1">
-                    <div class="method-icon text-2xl leading-none" aria-hidden="true">⏱️</div>
-                    <div class="method-label text-[0.82rem] font-semibold text-center">By Hours</div>
-                    <div class="method-sub text-[0.7rem] text-text-muted text-center">Based on time worked</div>
-                </button>
-                <button class="method-btn" data-method="points" id="methodPoints" role="radio" aria-checked="false" tabindex="-1">
-                    <div class="method-icon text-2xl leading-none" aria-hidden="true">⭐</div>
-                    <div class="method-label text-[0.82rem] font-semibold text-center">By Role Points</div>
-                    <div class="method-sub text-[0.7rem] text-text-muted text-center">Weighted by position</div>
-                </button>
+            <div class="pl-10">
+                <div class="method-selector grid grid-cols-3 gap-2.5 max-sm:grid-cols-1 max-sm:gap-2" role="radiogroup" aria-label="Tip split method">
+                    <button class="method-btn active" data-method="equal" id="methodEqual" role="radio" aria-checked="true">
+                        <div class="method-icon text-2xl leading-none" aria-hidden="true">⚖️</div>
+                        <div class="method-label text-[0.82rem] font-semibold text-center">Equal Split</div>
+                        <div class="method-sub text-[0.7rem] text-text-muted text-center">Same share for everyone</div>
+                    </button>
+                    <button class="method-btn" data-method="hours" id="methodHours" role="radio" aria-checked="false" tabindex="-1">
+                        <div class="method-icon text-2xl leading-none" aria-hidden="true">⏱️</div>
+                        <div class="method-label text-[0.82rem] font-semibold text-center">By Hours</div>
+                        <div class="method-sub text-[0.7rem] text-text-muted text-center">Based on time worked</div>
+                    </button>
+                    <button class="method-btn" data-method="points" id="methodPoints" role="radio" aria-checked="false" tabindex="-1">
+                        <div class="method-icon text-2xl leading-none" aria-hidden="true">⭐</div>
+                        <div class="method-label text-[0.82rem] font-semibold text-center">By Role Points</div>
+                        <div class="method-sub text-[0.7rem] text-text-muted text-center">Weighted by position</div>
+                    </button>
+                </div>
             </div>
             
             <div id="pointsSloganNote" class="text-[0.74rem] text-text-secondary mt-3.5 pl-10 flex items-start gap-2 transition-all duration-300" style="display: none;">
@@ -137,30 +141,32 @@ import Layout from '../layouts/Layout.astro';
                 </div>
             </div>
 
-            <!-- Role presets (only visible in points mode) -->
-            <div class="role-presets mb-4 p-3.5 bg-accent-soft rounded-md border border-[rgba(240,165,0,0.1)]" id="rolePresets" style="display:none;">
-                <p class="presets-label text-[0.8rem] text-text-secondary mb-2.5 font-medium">Quick add by role:</p>
-                <div class="preset-chips flex flex-wrap gap-1.5">
-                    <button class="preset-chip" data-role="Server" data-points="10">🍽️ Server (10&nbsp;pts)</button>
-                    <button class="preset-chip" data-role="Bartender" data-points="8">🍸 Bartender (8&nbsp;pts)</button>
-                    <button class="preset-chip" data-role="Busser" data-points="5">🧹 Busser (5&nbsp;pts)</button>
-                    <button class="preset-chip" data-role="Host" data-points="4">👋 Host (4&nbsp;pts)</button>
-                    <button class="preset-chip" data-role="Food Runner" data-points="6">🏃 Runner (6&nbsp;pts)</button>
-                    <button class="preset-chip" data-role="Barback" data-points="4">🧊 Barback (4&nbsp;pts)</button>
+            <div class="pl-10">
+                <!-- Role presets (only visible in points mode) -->
+                <div class="role-presets mb-4 p-3.5 bg-accent-soft rounded-md border border-[rgba(240,165,0,0.1)]" id="rolePresets" style="display:none;">
+                    <p class="presets-label text-[0.8rem] text-text-secondary mb-2.5 font-medium">Quick add by role:</p>
+                    <div class="preset-chips flex flex-wrap gap-1.5">
+                        <button class="preset-chip" data-role="Server" data-points="10">🍽️ Server (10&nbsp;pts)</button>
+                        <button class="preset-chip" data-role="Bartender" data-points="8">🍸 Bartender (8&nbsp;pts)</button>
+                        <button class="preset-chip" data-role="Busser" data-points="5">🧹 Busser (5&nbsp;pts)</button>
+                        <button class="preset-chip" data-role="Host" data-points="4">👋 Host (4&nbsp;pts)</button>
+                        <button class="preset-chip" data-role="Food Runner" data-points="6">🏃 Runner (6&nbsp;pts)</button>
+                        <button class="preset-chip" data-role="Barback" data-points="4">🧊 Barback (4&nbsp;pts)</button>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Team list -->
-            <div class="team-list flex flex-col gap-2 mb-3" id="teamList" role="list" aria-label="Team members">
-                <!-- Team members will be rendered here -->
-            </div>
+                <!-- Team list -->
+                <div class="team-list flex flex-col gap-2 mb-3" id="teamList" role="list" aria-label="Team members">
+                    <!-- Team members will be rendered here -->
+                </div>
 
-            <button class="add-btn flex items-center justify-center gap-2 w-full p-3 bg-transparent border-1.5 border-dashed border-border rounded-md text-text-secondary text-sm font-medium cursor-pointer transition-all duration-200 ease-(--ease-base) hover:border-accent hover:text-accent hover:bg-accent-soft" id="addMemberBtn">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                    <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                Add Team Member
-            </button>
+                <button class="add-btn flex items-center justify-center gap-2 w-full p-3 bg-transparent border-1.5 border-dashed border-border rounded-md text-text-secondary text-sm font-medium cursor-pointer transition-all duration-200 ease-(--ease-base) hover:border-accent hover:text-accent hover:bg-accent-soft" id="addMemberBtn">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                        <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Add Team Member
+                </button>
+            </div>
         </section>
 
         <!-- Step 4: Compliance Rules -->
@@ -611,13 +617,13 @@ import Layout from '../layouts/Layout.astro';
         <!-- Footer -->
         <footer class="footer text-center mt-8 pt-5">
             <p class="text-text-muted text-[0.78rem] mb-3">100% free · No sign-up · Your data stays in your browser</p>
-            <nav class="footer-links flex justify-center gap-4 text-[0.75rem] font-medium text-text-secondary" aria-label="Footer Navigation">
+            <nav class="footer-links flex items-center justify-center gap-4 text-[0.75rem] font-medium text-text-secondary" aria-label="Footer Navigation">
                 <a href="/about" class="hover:text-accent transition-colors duration-150 no-underline">About Us</a>
-                <span class="text-text-muted" aria-hidden="true">•</span>
+                <span class="w-1 h-1 rounded-full bg-border/50" aria-hidden="true"></span>
                 <a href="/privacy" class="hover:text-accent transition-colors duration-150 no-underline">Privacy Policy</a>
-                <span class="text-text-muted" aria-hidden="true">•</span>
+                <span class="w-1 h-1 rounded-full bg-border/50" aria-hidden="true"></span>
                 <a href="/terms" class="hover:text-accent transition-colors duration-150 no-underline">Terms & Conditions</a>
-                <span class="text-text-muted" aria-hidden="true">•</span>
+                <span class="w-1 h-1 rounded-full bg-border/50" aria-hidden="true"></span>
                 <a href="/contact" class="hover:text-accent transition-colors duration-150 no-underline">Contact Us</a>
             </nav>
         </footer>
