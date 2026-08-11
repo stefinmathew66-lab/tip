@@ -332,13 +332,49 @@ import Layout from '../layouts/Layout.astro';
                 
                 <details class="faq-accordion">
                     <summary class="faq-question">
-                        <span>Does this differ if my restaurant is in a state with no tip credit, like California or Washington?</span>
+                        <span>Can California restaurants include kitchen staff (cooks, dishwashers) in a tip pool?</span>
                         <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
                             <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </summary>
                     <div class="faq-answer">
-                        <p>Yes. States like California, Washington, Oregon, Nevada, Minnesota, Alaska, and Montana don't allow a tip credit at all — employers must pay full state minimum wage regardless of tips. In these states, the tip-credit restriction on including back-of-house staff doesn't apply the same way, which generally gives more flexibility for kitchen inclusion — but check for other state-specific tip pooling rules that may still apply.</p>
+                        <p>Generally yes — unlike most states, California doesn't allow employers to take a tip credit, so the federal restriction that blocks back-of-house inclusion when a tip credit is claimed doesn't apply here. Tip pool participants still need to meaningfully contribute to the service customers receive, so confirm current guidance from the California Labor Commissioner's Office before including purely non-customer-facing roles.</p>
+                    </div>
+                </details>
+                
+                <details class="faq-accordion">
+                    <summary class="faq-question">
+                        <span>Since Texas allows a tip credit, does that limit who can be in the tip pool?</span>
+                        <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                            <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>Yes — this is the detail Texas restaurant managers most often miss. If your restaurant takes a tip credit (pays the lower tipped minimum wage), federal law prohibits including back-of-house staff like cooks and dishwashers in the pool. To legally include kitchen staff, the employer must pay the full Texas minimum wage with no tip credit taken.</p>
+                    </div>
+                </details>
+                
+                <details class="faq-accordion">
+                    <summary class="faq-question">
+                        <span>Are there differences in tip pooling rules between New York City and the rest of the state?</span>
+                        <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                            <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>The core eligibility rules are generally consistent statewide, but minimum wage and tip credit amounts differ by region — New York City, Long Island/Westchester, and the rest of the state each have their own figures under New York's Hospitality Wage Order. This regional split directly affects the wage math behind your tip pool calculations, so confirm your specific region's current numbers.</p>
+                    </div>
+                </details>
+                
+                <details class="faq-accordion">
+                    <summary class="faq-question">
+                        <span>Since Florida's minimum wage is different from the federal minimum, how does that affect the tip credit?</span>
+                        <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                            <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>Florida employers taking a tip credit must ensure a tipped employee's cash wage plus tips reaches Florida's minimum wage — not the lower federal minimum — and Florida's minimum wage has been rising on a set schedule under a voter-approved measure. That means the tip credit gap employers need to cover has been shrinking year over year, so always check the current year's figure rather than reusing an old one.</p>
                     </div>
                 </details>
                 
@@ -485,10 +521,34 @@ import Layout from '../layouts/Layout.astro';
     },
     {
       "@type": "Question",
-      "name": "Does this differ if my restaurant is in a state with no tip credit, like California or Washington?",
+      "name": "Can California restaurants include kitchen staff (cooks, dishwashers) in a tip pool?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "<p>Yes. States like California, Washington, Oregon, Nevada, Minnesota, Alaska, and Montana don't allow a tip credit at all — employers must pay full state minimum wage regardless of tips. In these states, the tip-credit restriction on including back-of-house staff doesn't apply the same way, which generally gives more flexibility for kitchen inclusion — but check for other state-specific tip pooling rules that may still apply.</p>"
+        "text": "<p>Generally yes — unlike most states, California doesn't allow employers to take a tip credit, so the federal restriction that blocks back-of-house inclusion when a tip credit is claimed doesn't apply here. Tip pool participants still need to meaningfully contribute to the service customers receive, so confirm current guidance from the California Labor Commissioner's Office before including purely non-customer-facing roles.</p>"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Since Texas allows a tip credit, does that limit who can be in the tip pool?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "<p>Yes — this is the detail Texas restaurant managers most often miss. If your restaurant takes a tip credit (pays the lower tipped minimum wage), federal law prohibits including back-of-house staff like cooks and dishwashers in the pool. To legally include kitchen staff, the employer must pay the full Texas minimum wage with no tip credit taken.</p>"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are there differences in tip pooling rules between New York City and the rest of the state?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "<p>The core eligibility rules are generally consistent statewide, but minimum wage and tip credit amounts differ by region — New York City, Long Island/Westchester, and the rest of the state each have their own figures under New York's Hospitality Wage Order. This regional split directly affects the wage math behind your tip pool calculations, so confirm your specific region's current numbers.</p>"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Since Florida's minimum wage is different from the federal minimum, how does that affect the tip credit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "<p>Florida employers taking a tip credit must ensure a tipped employee's cash wage plus tips reaches Florida's minimum wage — not the lower federal minimum — and Florida's minimum wage has been rising on a set schedule under a voter-approved measure. That means the tip credit gap employers need to cover has been shrinking year over year, so always check the current year's figure rather than reusing an old one.</p>"
       }
     },
     {
