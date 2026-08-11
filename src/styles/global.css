@@ -567,6 +567,213 @@
 }
 
 /* ============================================
+   Mobile Responsiveness (max-width: 480px)
+   ============================================ */
+@media (max-width: 480px) {
+  /* Header navigation - clean, compact links */
+  .header {
+    margin-bottom: 12px !important;
+  }
+  .header .logo {
+    margin-bottom: 4px !important;
+    gap: 6px !important;
+  }
+  .header .logo-icon svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  .header .logo-text {
+    font-size: 1.35rem !important;
+  }
+  .header .tagline {
+    font-size: 0.75rem !important;
+    margin-bottom: 0 !important;
+  }
+  .header nav {
+    margin-top: 8px !important;
+    gap: 6px !important;
+  }
+  .header nav span {
+    display: none; /* Hide separator dots on mobile */
+  }
+  .header nav a {
+    padding: 5px 10px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill-sm);
+    font-size: 0.68rem;
+    transition: all 0.2s var(--ease-base);
+  }
+  .header nav a:hover {
+    border-color: var(--color-accent);
+  }
+
+  /* Reduce steps card padding and spacing */
+  .card {
+    padding: 12px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .step-header {
+    margin-bottom: 6px !important;
+    gap: 8px !important;
+  }
+  
+  .step-badge {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 0.72rem !important;
+  }
+
+  .step-card h1,
+  .step-card h2 {
+    font-size: 0.95rem !important;
+  }
+  
+  .step-desc {
+    display: none !important; /* Hide description text to fit cards in first page load */
+  }
+  
+  .compliance-grid {
+    padding-left: 0 !important;
+  }
+  
+  .legal-source-disclaimer {
+    padding-left: 0 !important;
+  }
+
+  /* Step 1: Currency Input Compacting */
+  .currency-input input {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    font-size: 1rem !important;
+    padding-left: 26px !important;
+  }
+  .currency-symbol {
+    font-size: 1rem !important;
+    left: 12px !important;
+  }
+
+  /* Step 2: Split Method Compacting */
+  .method-selector {
+    gap: 6px !important;
+  }
+  .method-btn {
+    padding: 10px 6px !important;
+  }
+  .method-btn .method-icon {
+    font-size: 1.4rem !important;
+    margin-bottom: 2px !important;
+  }
+  .method-btn .method-label {
+    font-size: 0.76rem !important;
+  }
+  .method-btn .method-sub {
+    display: none !important; /* Hide sub description on mobile */
+  }
+
+  /* Step 3: Team Members Row Compacting */
+  .role-presets {
+    padding: 10px !important;
+    margin-bottom: 8px !important;
+  }
+  .presets-label {
+    margin-bottom: 6px !important;
+    font-size: 0.72rem !important;
+  }
+  .preset-chip {
+    padding: 4px 8px !important;
+    font-size: 0.68rem !important;
+  }
+  .team-list {
+    gap: 6px !important;
+    margin-bottom: 8px !important;
+  }
+  .team-member {
+    padding: 4px 6px !important;
+    gap: 6px !important;
+  }
+  .member-number {
+    font-size: 0.72rem !important;
+    width: 14px !important;
+  }
+  
+  .remove-btn {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .add-btn {
+    padding: 8px !important;
+    font-size: 0.78rem !important;
+  }
+  .add-btn svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  /* Structured grids for member inputs */
+  .member-fields {
+    display: grid !important;
+    grid-template-columns: 85px 1fr !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+  
+  .member-fields select.member-type {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0 !important;
+    width: 100% !important;
+    padding: 6px 8px !important;
+    font-size: 0.78rem !important;
+  }
+  
+  .member-fields input.member-name {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0 !important;
+    width: 100% !important;
+    padding: 6px 8px !important;
+    font-size: 0.78rem !important;
+  }
+  
+  .member-fields input.member-hours {
+    grid-column: 1 / span 2;
+    grid-row: 2;
+    width: 100% !important;
+    padding: 6px 8px !important;
+    font-size: 0.78rem !important;
+  }
+  
+  .member-fields input.member-role {
+    grid-column: 2;
+    grid-row: 2;
+    width: 100% !important;
+    padding: 6px 8px !important;
+    font-size: 0.78rem !important;
+  }
+  
+  .member-fields input.member-points {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100% !important;
+    padding: 6px 8px !important;
+    font-size: 0.78rem !important;
+  }
+
+  /* Results Table Mobile Optimizations */
+  .results-table th, 
+  .results-table td {
+    padding: 10px 6px !important;
+    font-size: 0.76rem !important;
+  }
+  
+  .results-table td .detail-col {
+    font-size: 0.68rem !important;
+  }
+}
+
+/* ============================================
    Print Styles
    ============================================ */
 @media print {
