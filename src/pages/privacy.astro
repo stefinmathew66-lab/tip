@@ -25,8 +25,14 @@ import Layout from '../layouts/Layout.astro';
             <h2>1. Zero Server-Side Data Collection</h2>
             <p>TipSplit is designed as a client-side utility. All computations, calculations, and inputs are processed locally in your web browser. <strong>We do not collect, store, or transmit any data</strong> you enter into the calculator—including total tips, team member names, hours worked, role points, or calculated distributions—to any server.</p>
 
-            <h2>2. Browser Storage</h2>
-            <p>We may use local browser storage (such as LocalStorage or SessionStorage) to preserve your preferences (like the chosen split method or current team list) so that you don't lose your work if you refresh the page. This data remains on your machine and is never sent to our servers.</p>
+            <h2>2. Local Browser Storage & Data Persistence</h2>
+            <p>We use local browser storage (such as <code>localStorage</code> and <code>sessionStorage</code>) to power features that improve your day-to-day workflow. Specifically:</p>
+            <ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 16px;">
+                <li><strong>Active State Preservation:</strong> Remembers your inputs and current team list to prevent data loss when navigating or selecting a new location.</li>
+                <li><strong>Shift History Log:</strong> If you choose to use the "Save Shift" feature, the complete results and staff names for that shift are logged locally in your browser.</li>
+                <li><strong>Roster Templates:</strong> If you use the "Save Roster Template" feature, the list of team member names and roles is stored on your device so you can reload it instantly.</li>
+            </ul>
+            <p>All of this data is stored 100% locally on your own machine. We do not transfer, compile, or back up any of this information to our servers or third parties. You can clear all saved data at any time by clearing your browser's cache/cookies or using the delete actions within the app.</p>
 
             <h2>3. Third-Party Advertising and Cookies</h2>
             <p>We may partner with third-party advertising networks (such as Google AdSense) to serve advertisements when you visit our website. These companies may use cookies, device identifiers, and similar tracking technologies to collect information about your visits to this and other websites in order to serve personalized ads based on your interests.</p>

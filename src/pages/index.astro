@@ -92,6 +92,24 @@ import Layout from '../layouts/Layout.astro';
             </div>
             <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Add everyone who&rsquo;s in the tip pool today.</p>
 
+            <!-- Roster Templates Toolbar -->
+            <div class="roster-templates-toolbar mb-4.5 pl-10 flex flex-wrap items-center gap-2">
+                <button type="button" id="saveRosterBtn" class="flex items-center gap-1 px-3 py-1.5 bg-bg-input border border-border rounded-sm text-text-secondary text-[0.75rem] font-bold cursor-pointer hover:border-accent hover:text-accent transition-all active:scale-[0.98]">
+                    💾 Save Roster Template
+                </button>
+                <div class="relative inline-block" id="loadRosterContainer">
+                    <button type="button" id="loadRosterDropdownBtn" class="flex items-center gap-1.5 px-3 py-1.5 bg-bg-input border border-border rounded-sm text-text-secondary text-[0.75rem] font-bold cursor-pointer hover:border-accent hover:text-accent transition-all active:scale-[0.98]" aria-haspopup="true" aria-expanded="false">
+                        📂 Load Roster
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" class="transition-transform duration-200" aria-hidden="true">
+                            <path d="M2.5 3.75L5 6.25L7.5 3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div id="rosterTemplatesMenu" class="absolute left-0 mt-1.5 w-56 bg-bg-card border border-border rounded-md shadow-lg z-50 py-1 hidden" role="menu">
+                        <!-- Dropdown items will be rendered by JS -->
+                    </div>
+                </div>
+            </div>
+
             <!-- Role presets (only visible in points mode) -->
             <div class="role-presets mb-4 p-3.5 bg-accent-soft rounded-md border border-[rgba(240,165,0,0.1)]" id="rolePresets" style="display:none;">
                 <p class="presets-label text-[0.8rem] text-text-secondary mb-2.5 font-medium">Quick add by role:</p>

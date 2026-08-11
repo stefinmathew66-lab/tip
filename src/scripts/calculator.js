@@ -78,6 +78,11 @@
     const historyEmpty = document.getElementById('historyEmpty');
     const historyList = document.getElementById('historyList');
 
+    // Roster Template elements
+    const saveRosterBtn = document.getElementById('saveRosterBtn');
+    const loadRosterDropdownBtn = document.getElementById('loadRosterDropdownBtn');
+    const rosterTemplatesMenu = document.getElementById('rosterTemplatesMenu');
+
     // Compliance elements
     const stateSelect = document.getElementById('stateSelect');
     const takeTipCreditInput = document.getElementById('takeTipCredit');
@@ -142,6 +147,24 @@
             });
         }
         renderHistoryList();
+
+        // Roster Templates setup
+        if (saveRosterBtn) saveRosterBtn.addEventListener('click', saveRosterTemplate);
+        if (loadRosterDropdownBtn && rosterTemplatesMenu) {
+            loadRosterDropdownBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                rosterTemplatesMenu.classList.toggle('hidden');
+                
+                const isExpanded = !rosterTemplatesMenu.classList.contains('hidden');
+                loadRosterDropdownBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+            });
+            
+            document.addEventListener('click', () => {
+                rosterTemplatesMenu.classList.add('hidden');
+                loadRosterDropdownBtn.setAttribute('aria-expanded', 'false');
+            });
+        }
+        renderRosterTemplatesMenu();
 
         // State & Tip Credit setup
         if (stateSelect && takeTipCreditInput) {
@@ -1166,6 +1189,140 @@
         
         renderHistoryList();
         showToast('Shift deleted.');
+    }
+
+    // ─── Roster Templates Handlers ───────────
+    function renderRosterTemplatesMenu() {
+        if (!rosterTemplatesMenu) return;
+        
+        let rosters = [];
+        try {
+            const saved = localStorage.getItem('tipsplit_rosters');
+            if (saved) rosters = JSON.parse(saved);
+        } catch (e) {
+            console.error('Failed to parse roster templates', e);
+        }
+        
+        if (rosters.length === 0) {
+            rosterTemplatesMenu.innerHTML = `
+                <div class="px-4 py-2 text-xs text-text-muted italic text-center">No saved rosters yet.</div>
+            `;
+            return;
+        }
+        
+        rosterTemplatesMenu.innerHTML = rosters.map(r => `
+            <div class="roster-menu-item flex items-center justify-between px-3 py-2 text-xs text-text-secondary hover:bg-accent-soft hover:text-accent cursor-pointer transition-colors" data-id="${r.id}">
+                <span class="roster-load-action font-semibold flex-grow py-0.5">${escapeHtml(r.name)} (${r.members.length})</span>
+                <button type="button" class="roster-delete-action text-text-muted hover:text-[var(--color-red)] px-1 py-0.5 ml-2 transition-colors cursor-pointer" data-id="${r.id}" aria-label="Delete template">
+                    ❌
+                </button>
+            </div>
+        `).join('');
+        
+        // Add click listeners to items
+        rosterTemplatesMenu.querySelectorAll('.roster-menu-item').forEach(item => {
+            const loadBtn = item.querySelector('.roster-load-action');
+            const deleteBtn = item.querySelector('.roster-delete-action');
+            const id = parseInt(item.dataset.id, 10);
+            
+            loadBtn.addEventListener('click', () => {
+                loadRosterTemplate(id);
+            });
+            
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteRosterTemplate(id);
+            });
+        });
+    }
+
+    function saveRosterTemplate() {
+        const activeMems = members.filter(m => m.name.trim() !== '');
+        if (activeMems.length === 0) {
+            showToast('Please add at least one named team member first!');
+            return;
+        }
+        
+        const defaultName = `Roster ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+        const templateName = prompt("Enter a name for this roster template (e.g. Friday Staff):", defaultName);
+        if (templateName === null) return; // Cancelled
+        
+        const rosterRecord = {
+            id: Date.now(),
+            name: templateName.trim() || defaultName,
+            members: activeMems.map(m => ({
+                name: m.name,
+                role: m.role,
+                type: m.type,
+                points: m.points
+            }))
+        };
+        
+        let rosters = [];
+        try {
+            const saved = localStorage.getItem('tipsplit_rosters');
+            if (saved) rosters = JSON.parse(saved);
+        } catch (e) {}
+        
+        rosters.unshift(rosterRecord);
+        localStorage.setItem('tipsplit_rosters', JSON.stringify(rosters));
+        
+        renderRosterTemplatesMenu();
+        showToast('Roster template saved!');
+    }
+
+    function loadRosterTemplate(rosterId) {
+        let rosters = [];
+        try {
+            const saved = localStorage.getItem('tipsplit_rosters');
+            if (saved) rosters = JSON.parse(saved);
+        } catch (e) {}
+        
+        const record = rosters.find(r => r.id === rosterId);
+        if (!record) return;
+        
+        // Restore members (clear inputs)
+        members = [];
+        memberIdCounter = 0;
+        record.members.forEach(m => {
+            memberIdCounter++;
+            members.push({
+                id: memberIdCounter,
+                name: m.name || '',
+                role: m.role || '',
+                hours: '', // Always leave hours blank for a fresh shift
+                points: m.points || '',
+                type: m.type || 'foh'
+            });
+        });
+        
+        renderTeamList();
+        validateCompliance();
+        autoRecalc();
+        
+        rosterTemplatesMenu.classList.add('hidden');
+        showToast(`Loaded roster: "${record.name}"!`);
+    }
+
+    function deleteRosterTemplate(rosterId) {
+        let rosters = [];
+        try {
+            const saved = localStorage.getItem('tipsplit_rosters');
+            if (saved) rosters = JSON.parse(saved);
+        } catch (e) {}
+        
+        const record = rosters.find(r => r.id === rosterId);
+        const name = record ? record.name : 'this template';
+        
+        if (!confirm(`Are you sure you want to delete the roster template "${name}"?`)) {
+            return;
+        }
+        
+        rosters = rosters.filter(r => r.id !== rosterId);
+        localStorage.setItem('tipsplit_rosters', JSON.stringify(rosters));
+        
+        renderRosterTemplatesMenu();
+        showToast('Roster template deleted.');
     }
 
     // ─── Boot ───────────────────────────────
