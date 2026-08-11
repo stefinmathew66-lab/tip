@@ -766,14 +766,25 @@
         navigator.clipboard.writeText(text).then(() => {
             showToast('Copied to clipboard!');
         }).catch(() => {
-            // Fallback
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            showToast('Copied to clipboard!');
+            // Fallback for iOS/Safari or older browsers
+            try {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                textarea.setSelectionRange(0, 99999);
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textarea);
+                if (successful) {
+                    showToast('Copied to clipboard!');
+                } else {
+                    showToast('Failed to copy. Please select results and copy manually.');
+                }
+            } catch (err) {
+                showToast('Failed to copy. Please select results and copy manually.');
+            }
         });
     }
 
