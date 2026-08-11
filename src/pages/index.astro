@@ -241,6 +241,48 @@ import Layout from '../layouts/Layout.astro';
             </p>
         </section>
 
+        <!-- FAQ Section -->
+        <section class="card step-card bg-bg-card/45 border border-border/60 rounded-lg p-6 sm:p-8 mt-6 text-left static-content faq-section">
+            <h2 class="text-xl font-bold text-text-primary mb-6">Frequently Asked Questions</h2>
+            
+            <div class="faq-list flex flex-col gap-5">
+                <div class="faq-item border-b border-border/40 pb-4">
+                    <h3 class="text-sm font-semibold text-text-primary mb-2">What's the difference between tip pooling and tip sharing?</h3>
+                    <p class="text-xs text-text-secondary leading-relaxed">
+                        Tip pooling is a system where all or a percentage of tips collected during a shift are aggregated into a single pool and then redistributed among eligible employees based on a set formula (like hours worked or points). Tip sharing (or tipping out) is a practice where tipped employees give a portion of their individual tips to support staff (like bussers, food runners, or barbacks) who helped them perform their duties.
+                    </p>
+                </div>
+                
+                <div class="faq-item border-b border-border/40 pb-4">
+                    <h3 class="text-sm font-semibold text-text-primary mb-2">What is a tip pooling calculator?</h3>
+                    <p class="text-xs text-text-secondary leading-relaxed">
+                        A tip pooling calculator is a digital tool designed to automate the process of calculating tip distributions for restaurant and hospitality workers. It eliminates math errors by taking inputs like total tips, hours worked, or role points, and calculating the exact cash share for each staff member in accordance with federal and state compliance rules.
+                    </p>
+                </div>
+                
+                <div class="faq-item border-b border-border/40 pb-4">
+                    <h3 class="text-sm font-semibold text-text-primary mb-2">Who should use a tip pooling calculator?</h3>
+                    <p class="text-xs text-text-secondary leading-relaxed">
+                        Restaurant owners, general managers, shift leads, bar managers, and hospitality supervisors should use a tip pooling calculator to save time at the end of shifts, maintain complete payroll transparency, and ensure compliance with FLSA laws. Shift employees can also use it to verify that their distributed tip payouts are mathematically accurate.
+                    </p>
+                </div>
+                
+                <div class="faq-item border-b border-border/40 pb-4">
+                    <h3 class="text-sm font-semibold text-text-primary mb-2">How do you calculate tip pooling?</h3>
+                    <p class="text-xs text-text-secondary leading-relaxed">
+                        Calculating tip pooling depends on the chosen method. For an hours-based split, you divide the total tip pool by the sum of all hours worked to find the hourly tip rate, then multiply that rate by each individual's hours. For a points-based split, you assign point values to roles, multiply each employee's hours by their points to get point-hours, sum the point-hours to find the value per point-hour, and distribute tips proportionally.
+                    </p>
+                </div>
+                
+                <div class="faq-item pb-1">
+                    <h3 class="text-sm font-semibold text-text-primary mb-2">How should dispensaries divide tips?</h3>
+                    <p class="text-xs text-text-secondary leading-relaxed">
+                        Cannabis dispensaries generally split tips using either an equal split per shift or an hours-based calculation among budtenders on duty. Because dispensary compliance rules are strict under state cannabis regulations, managers must ensure that non-exempt budtenders receive 100% of the tips and that managers, supervisors, or security guards are excluded from participating in the tip pool.
+                    </p>
+                </div>
+            </div>
+        </section>
+
         <!-- Footer -->
         <footer class="footer text-center mt-8 pt-5">
             <p class="text-text-muted text-[0.78rem] mb-3">100% free · No sign-up · Your data stays in your browser</p>
@@ -257,6 +299,56 @@ import Layout from '../layouts/Layout.astro';
         </footer>
     </main>
 </Layout>
+
+<!-- FAQ JSON-LD Schema for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What's the difference between tip pooling and tip sharing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "<p>Tip pooling is a system where all or a percentage of tips collected during a shift are aggregated into a single pool and then redistributed among eligible employees based on a set formula (like hours worked or points). Tip sharing (or tipping out) is a practice where tipped employees give a portion of their individual tips to support staff (like bussers, food runners, or barbacks) who helped them perform their duties.</p>"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a tip pooling calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "<p>A tip pooling calculator is a digital tool designed to automate the process of calculating tip distributions for restaurant and hospitality workers. It eliminates math errors by taking inputs like total tips, hours worked, or role points, and calculating the exact cash share for each staff member in accordance with federal and state compliance rules.</p>"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who should use a tip pooling calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "<p>Restaurant owners, general managers, shift leads, bar managers, and hospitality supervisors should use a tip pooling calculator to save time at the end of shifts, maintain complete payroll transparency, and ensure compliance with FLSA laws. Shift employees can also use it to verify that their distributed tip payouts are mathematically accurate.</p>"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do you calculate tip pooling?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "<p>Calculating tip pooling depends on the chosen method. For an hours-based split, you divide the total tip pool by the sum of all hours worked to find the hourly tip rate, then multiply that rate by each individual's hours. For a points-based split, you assign point values to roles, multiply each employee's hours by their points to get point-hours, sum the point-hours to find the value per point-hour, and distribute tips proportionally.</p>"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How should dispensaries divide tips?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "<p>Cannabis dispensaries generally split tips using either an equal split per shift or an hours-based calculation among budtenders on duty. Because dispensary compliance rules are strict under state cannabis regulations, managers must ensure that non-exempt budtenders receive 100% of the tips and that managers, supervisors, or security guards are excluded from participating in the tip pool.</p>"
+      }
+    }
+  ]
+}
+</script>
 
 <script>
     import '../scripts/calculator.js';
