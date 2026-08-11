@@ -72,6 +72,12 @@
     const whatsappBtn = document.getElementById('whatsappBtn');
     const toast = document.getElementById('toast');
 
+    // Shift History elements
+    const saveShiftBtn = document.getElementById('saveShiftBtn');
+    const historyCard = document.getElementById('historyCard');
+    const historyEmpty = document.getElementById('historyEmpty');
+    const historyList = document.getElementById('historyList');
+
     // Compliance elements
     const stateSelect = document.getElementById('stateSelect');
     const takeTipCreditInput = document.getElementById('takeTipCredit');
@@ -121,6 +127,21 @@
         printBtn.addEventListener('click', () => window.print());
         if (pdfBtn) pdfBtn.addEventListener('click', () => loadJsPdf(generatePdf));
         if (whatsappBtn) whatsappBtn.addEventListener('click', shareWhatsApp);
+        if (saveShiftBtn) saveShiftBtn.addEventListener('click', saveShift);
+        if (historyList) {
+            historyList.addEventListener('click', (e) => {
+                const restoreBtn = e.target.closest('.restore-btn');
+                const deleteBtn = e.target.closest('.delete-btn');
+                if (restoreBtn) {
+                    const id = parseInt(restoreBtn.dataset.id, 10);
+                    restoreShift(id);
+                } else if (deleteBtn) {
+                    const id = parseInt(deleteBtn.dataset.id, 10);
+                    deleteShift(id);
+                }
+            });
+        }
+        renderHistoryList();
 
         // State & Tip Credit setup
         if (stateSelect && takeTipCreditInput) {
@@ -945,6 +966,206 @@
         
         const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
         window.open(url, '_blank');
+    }
+
+    // ─── Shift History Handlers ──────────────
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function renderHistoryList() {
+        if (!historyList || !historyEmpty) return;
+        
+        let history = [];
+        try {
+            const saved = localStorage.getItem('tipsplit_history');
+            if (saved) history = JSON.parse(saved);
+        } catch (e) {
+            console.error('Failed to parse history', e);
+        }
+        
+        if (history.length === 0) {
+            historyEmpty.classList.remove('hidden');
+            historyList.classList.add('hidden');
+            historyList.innerHTML = '';
+            return;
+        }
+        
+        historyEmpty.classList.add('hidden');
+        historyList.classList.remove('hidden');
+        
+        historyList.innerHTML = history.map(r => {
+            const dateDisplay = r.date || new Date(r.id).toLocaleString();
+            const stateDisplay = r.state || 'US';
+            const totalDisplay = r.totalTips ? parseFloat(r.totalTips).toFixed(2) : '0.00';
+            const methodDisplay = r.method === 'equal' ? 'Equal' : r.method === 'hours' ? 'Hours' : 'Points';
+            const sizeDisplay = r.members ? r.members.length : 0;
+            
+            return `
+                <div class="history-item flex items-center justify-between p-3.5 bg-bg-input border border-border rounded-md gap-3 flex-wrap sm:flex-nowrap">
+                    <div class="history-info flex-grow">
+                        <div class="font-bold text-text-primary text-sm flex items-center gap-1.5">
+                            ${escapeHtml(r.name)}
+                            <span class="text-[0.72rem] font-semibold px-1.5 py-0.5 bg-accent-soft text-accent rounded-sm uppercase tracking-wide">${escapeHtml(stateDisplay)}</span>
+                        </div>
+                        <div class="text-text-secondary text-[0.75rem] mt-0.5">
+                            ${dateDisplay} &bull; ${methodDisplay} Split &bull; ${sizeDisplay} members
+                        </div>
+                        <div class="text-accent text-[0.8rem] font-bold mt-1">Total Pool: $${totalDisplay}</div>
+                    </div>
+                    <div class="history-actions flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end">
+                        <button type="button" class="history-btn restore-btn flex items-center gap-1 px-3 py-1.5 bg-accent-soft text-accent rounded text-[0.75rem] font-bold cursor-pointer transition-all hover:bg-accent hover:text-bg-primary active:scale-[0.97]" data-id="${r.id}">
+                            📂 Restore
+                        </button>
+                        <button type="button" class="history-btn delete-btn flex items-center gap-1 px-3 py-1.5 bg-bg-card hover:bg-[var(--color-red)] hover:text-white border border-border rounded text-[0.75rem] font-semibold text-text-muted cursor-pointer transition-all active:scale-[0.97]" data-id="${r.id}">
+                            ❌ Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function saveShift() {
+        if (!totalTipsInput || !totalTipsInput.value) {
+            showToast('Please enter a total tip amount first!');
+            return;
+        }
+        
+        const activeMems = members.filter(m => m.name.trim() !== '');
+        if (activeMems.length === 0) {
+            showToast('Please add at least one team member first!');
+            return;
+        }
+        
+        const defaultName = `Shift ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+        const shiftName = prompt("Enter a label/note for this shift:", defaultName);
+        if (shiftName === null) return; // Cancelled
+        
+        const dateStr = new Date().toLocaleString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+        
+        const shiftRecord = {
+            id: Date.now(),
+            name: shiftName.trim() || defaultName,
+            date: dateStr,
+            method: currentMethod,
+            totalTips: parseFloat(totalTipsInput.value),
+            state: stateSelect ? stateSelect.value : 'US',
+            takeTipCredit: takeTipCreditInput ? takeTipCreditInput.checked : false,
+            members: activeMems.map(m => ({
+                name: m.name,
+                role: m.role,
+                hours: m.hours,
+                points: m.points,
+                type: m.type
+            }))
+        };
+        
+        let history = [];
+        try {
+            const saved = localStorage.getItem('tipsplit_history');
+            if (saved) history = JSON.parse(saved);
+        } catch (e) {}
+        
+        history.unshift(shiftRecord);
+        localStorage.setItem('tipsplit_history', JSON.stringify(history));
+        
+        renderHistoryList();
+        showToast('Shift saved successfully!');
+    }
+
+    function restoreShift(shiftId) {
+        let history = [];
+        try {
+            const saved = localStorage.getItem('tipsplit_history');
+            if (saved) history = JSON.parse(saved);
+        } catch (e) {}
+        
+        const record = history.find(s => s.id === shiftId);
+        if (!record) return;
+        
+        // Restore values
+        if (stateSelect && record.state) {
+            stateSelect.value = record.state;
+            handleStateChange();
+        }
+        
+        if (takeTipCreditInput && record.takeTipCredit !== undefined) {
+            takeTipCreditInput.checked = record.takeTipCredit;
+        }
+        
+        if (totalTipsInput && record.totalTips !== undefined) {
+            totalTipsInput.value = record.totalTips.toFixed(2);
+        }
+        
+        if (record.method) {
+            currentMethod = record.method;
+            methodBtns.forEach(btn => {
+                const isActive = btn.dataset.method === currentMethod;
+                btn.classList.toggle('active', isActive);
+                btn.setAttribute('aria-checked', isActive ? 'true' : 'false');
+                btn.setAttribute('tabindex', isActive ? '0' : '-1');
+            });
+            if (rolePresets) {
+                rolePresets.style.display = currentMethod === 'points' ? 'block' : 'none';
+            }
+        }
+        
+        if (record.members && Array.isArray(record.members)) {
+            members = [];
+            memberIdCounter = 0;
+            record.members.forEach(m => {
+                memberIdCounter++;
+                members.push({
+                    id: memberIdCounter,
+                    name: m.name || '',
+                    role: m.role || '',
+                    hours: m.hours || '',
+                    points: m.points || '',
+                    type: m.type || 'foh'
+                });
+            });
+        }
+        
+        renderTeamList();
+        validateCompliance();
+        calculate(true); // Force calculation run
+        
+        resultsCard.scrollIntoView({ behavior: 'smooth' });
+        showToast(`Restored "${record.name}"!`);
+    }
+
+    function deleteShift(shiftId) {
+        let history = [];
+        try {
+            const saved = localStorage.getItem('tipsplit_history');
+            if (saved) history = JSON.parse(saved);
+        } catch (e) {}
+        
+        const record = history.find(s => s.id === shiftId);
+        const name = record ? record.name : 'this shift';
+        
+        if (!confirm(`Are you sure you want to delete "${name}" from your history?`)) {
+            return;
+        }
+        
+        history = history.filter(s => s.id !== shiftId);
+        localStorage.setItem('tipsplit_history', JSON.stringify(history));
+        
+        renderHistoryList();
+        showToast('Shift deleted.');
     }
 
     // ─── Boot ───────────────────────────────
