@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --max-width: 640px;
+  --max-width: 820px;
   --color-bg-primary: #0c0f14;
   --color-bg-secondary: #13161d;
   --color-bg-card: #181c25;
