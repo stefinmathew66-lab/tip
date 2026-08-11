@@ -1,0 +1,305 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { states } from '../data/states';
+
+export async function getStaticPaths() {
+  return states.map(state => ({
+    params: { state: state.slug },
+    props: { stateData: state }
+  }));
+}
+
+const { stateData } = Astro.props;
+
+// Filter out current state to link to the other 3 states
+const otherStates = states.filter(s => s.slug !== stateData.slug);
+
+// Create JSON-LD FAQ schema
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": stateData.faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": `<p>${faq.answer}</p>`
+    }
+  }))
+};
+---
+
+<Layout 
+    title={stateData.seoTitle}
+    description={stateData.seoDescription}
+    keywords={`tip pooling calculator ${stateData.name.toLowerCase()}, ${stateData.name.toLowerCase()} tip pooling, tip pooling ${stateData.name.toLowerCase()}, free tip pooling calculator`}
+>
+    <!-- Skip link for keyboard users -->
+    <a href="#step1" class="skip-link absolute left-[-9999px] top-2 z-50 bg-accent text-bg-primary px-4 py-2 rounded-sm text-xs font-semibold no-underline focus:left-4">Skip to calculator</a>
+
+    <main class="app-container relative z-10 max-w-(--max-width) mx-auto px-4 py-6 sm:px-6 sm:py-10 pb-12">
+        <!-- Header -->
+        <header class="header text-center mb-8">
+            <div class="logo flex items-center justify-center gap-2 mb-2">
+                <div class="logo-icon text-accent flex drop-shadow-[0_0_8px_var(--color-accent-glow)]" aria-hidden="true">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                        <circle cx="14" cy="14" r="13" stroke="currentColor" stroke-width="2"/>
+                        <text x="14" y="19" text-anchor="middle" fill="currentColor" font-size="16" font-weight="700">$</text>
+                    </svg>
+                </div>
+                <a href="/" class="logo-text text-3xl font-extrabold bg-accent-gradient bg-clip-text text-transparent tracking-tight hover:opacity-90 no-underline">TipSplit</a>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-bold text-text-primary mt-6 mb-1">{stateData.name} Tip Pooling Calculator</h1>
+            <p class="tagline text-text-secondary text-sm font-normal">Fair tips, zero drama. Law-aware for {stateData.name} shifts.</p>
+            <nav class="flex items-center justify-center gap-4.5 mt-4 text-xs font-semibold text-text-secondary">
+                <a href="/privacy" class="hover:text-accent transition-colors duration-150">Privacy Policy</a>
+                <span class="w-1 h-1 rounded-full bg-border" aria-hidden="true"></span>
+                <a href="/terms" class="hover:text-accent transition-colors duration-150">Terms & Conditions</a>
+                <span class="w-1 h-1 rounded-full bg-border" aria-hidden="true"></span>
+                <a href="/contact" class="hover:text-accent transition-colors duration-150">Contact Us</a>
+            </nav>
+        </header>
+
+        <!-- Step 1: Total Tips -->
+        <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="step1" aria-labelledby="step1-heading">
+            <div class="step-header flex items-center gap-3 mb-1.5">
+                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">1</span>
+                <h2 id="step1-heading" class="text-lg font-bold text-text-primary text-balance">Total Tips</h2>
+            </div>
+            <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Enter the total tip amount to be split among the team.</p>
+            <div class="input-group currency-input relative">
+                <label for="totalTips" class="sr-only">Total tip amount in dollars</label>
+                <span class="currency-symbol absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary text-lg font-semibold pointer-events-none z-10" aria-hidden="true">$</span>
+                <input type="number" id="totalTips" name="totalTips" placeholder="0.00…" min="0" step="0.01" inputmode="decimal" autocomplete="off" spellcheck="false" class="w-full bg-bg-input border-1.5 border-border rounded-md py-3.5 pl-9 pr-4 text-text-primary text-lg font-medium transition-all duration-200 ease-(--ease-base) placeholder:text-text-muted placeholder:font-normal focus:border-accent focus:shadow-[0_0_0_3px_var(--color-accent-soft)] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+            </div>
+        </section>
+
+        <!-- Step 2: Split Method -->
+        <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="step2" aria-labelledby="step2-heading">
+            <div class="step-header flex items-center gap-3 mb-1.5">
+                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">2</span>
+                <h2 id="step2-heading" class="text-lg font-bold text-text-primary text-balance">Split Method</h2>
+            </div>
+            <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Choose how tips should be divided.</p>
+            <div class="method-selector grid grid-cols-3 gap-2.5 max-sm:grid-cols-1 max-sm:gap-2" role="radiogroup" aria-label="Tip split method">
+                <button class="method-btn active" data-method="equal" id="methodEqual" role="radio" aria-checked="true">
+                    <div class="method-icon text-2xl leading-none" aria-hidden="true">⚖️</div>
+                    <div class="method-label text-[0.82rem] font-semibold text-center">Equal Split</div>
+                    <div class="method-sub text-[0.7rem] text-text-muted text-center">Same share for everyone</div>
+                </button>
+                <button class="method-btn" data-method="hours" id="methodHours" role="radio" aria-checked="false" tabindex="-1">
+                    <div class="method-icon text-2xl leading-none" aria-hidden="true">⏱️</div>
+                    <div class="method-label text-[0.82rem] font-semibold text-center">By Hours</div>
+                    <div class="method-sub text-[0.7rem] text-text-muted text-center">Based on time worked</div>
+                </button>
+                <button class="method-btn" data-method="points" id="methodPoints" role="radio" aria-checked="false" tabindex="-1">
+                    <div class="method-icon text-2xl leading-none" aria-hidden="true">⭐</div>
+                    <div class="method-label text-[0.82rem] font-semibold text-center">By Role Points</div>
+                    <div class="method-sub text-[0.7rem] text-text-muted text-center">Weighted by position</div>
+                </button>
+            </div>
+        </section>
+
+        <!-- Step 3: Team Members -->
+        <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="step3" aria-labelledby="step3-heading">
+            <div class="step-header flex items-center gap-3 mb-1.5">
+                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">3</span>
+                <h2 id="step3-heading" class="text-lg font-bold text-text-primary text-balance">Team Members</h2>
+            </div>
+            <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Add everyone who&rsquo;s in the tip pool today.</p>
+
+            <!-- Role presets (only visible in points mode) -->
+            <div class="role-presets mb-4 p-3.5 bg-accent-soft rounded-md border border-[rgba(240,165,0,0.1)]" id="rolePresets" style="display:none;">
+                <p class="presets-label text-[0.8rem] text-text-secondary mb-2.5 font-medium">Quick add by role:</p>
+                <div class="preset-chips flex flex-wrap gap-1.5">
+                    <button class="preset-chip" data-role="Server" data-points="10">🍽️ Server (10&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Bartender" data-points="8">🍸 Bartender (8&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Busser" data-points="5">🧹 Busser (5&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Host" data-points="4">👋 Host (4&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Food Runner" data-points="6">🏃 Runner (6&nbsp;pts)</button>
+                    <button class="preset-chip" data-role="Barback" data-points="4">🧊 Barback (4&nbsp;pts)</button>
+                </div>
+            </div>
+
+            <!-- Team list -->
+            <div class="team-list flex flex-col gap-2 mb-3" id="teamList" role="list" aria-label="Team members">
+                <!-- Team members will be rendered here -->
+            </div>
+
+            <button class="add-btn flex items-center justify-center gap-2 w-full p-3 bg-transparent border-1.5 border-dashed border-border rounded-md text-text-secondary text-sm font-medium cursor-pointer transition-all duration-200 ease-(--ease-base) hover:border-accent hover:text-accent hover:bg-accent-soft" id="addMemberBtn">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                    <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Add Team Member
+            </button>
+        </section>
+
+        <!-- Step 4: Compliance Rules -->
+        <section class="card step-card bg-bg-card border border-border rounded-lg p-6 mb-4 transition-colors duration-200 ease-(--ease-base) hover:border-[rgba(240,165,0,0.25)] hover:shadow-[0_4px_30px_rgba(240,165,0,0.02)]" id="stepCompliance" aria-labelledby="compliance-heading">
+            <div class="step-header flex items-center gap-3 mb-1.5">
+                <span class="step-badge flex items-center justify-center w-7 h-7 rounded-full bg-accent-soft text-accent text-xs font-bold shrink-0" aria-hidden="true">4</span>
+                <h2 id="compliance-heading" class="text-lg font-bold text-text-primary text-balance">Compliance Rules</h2>
+            </div>
+            <p class="step-desc text-text-secondary text-xs mb-4 pl-10">Select state and wage setup to check tip pool compliance.</p>
+            
+            <div class="compliance-grid grid grid-cols-2 gap-4 max-sm:grid-cols-1 max-sm:gap-3 pl-10">
+                <div class="input-group">
+                    <label for="stateSelect" class="block text-[0.75rem] font-semibold text-text-secondary uppercase tracking-wider mb-2">Location / State</label>
+                    <select id="stateSelect" class="w-full bg-bg-input border-1.5 border-border rounded-md py-3.5 px-3.5 text-text-primary text-sm font-medium transition-all duration-200 ease-(--ease-base) focus:border-accent focus:shadow-[0_0_0_3px_var(--color-accent-soft)] focus:outline-none">
+                        <option value="US" selected={stateData.code === 'US'}>Federal (FLSA Baseline)</option>
+                        <option value="CA" selected={stateData.code === 'CA'}>California</option>
+                        <option value="FL" selected={stateData.code === 'FL'}>Florida</option>
+                        <option value="NY" selected={stateData.code === 'NY'}>New York</option>
+                        <option value="TX" selected={stateData.code === 'TX'}>Texas</option>
+                    </select>
+                </div>
+                
+                <div class="input-group flex flex-col justify-end">
+                    <label id="tipCreditContainer" class="flex items-center gap-2.5 cursor-pointer py-3 px-1">
+                        <input type="checkbox" id="takeTipCredit" class="w-4.5 h-4.5 rounded border-border bg-bg-input text-accent focus:ring-accent-soft focus:ring-offset-bg-primary">
+                        <span class="text-sm font-medium text-text-primary">Employer claims a tip credit</span>
+                    </label>
+                    <div id="tipCreditNote" class="text-[0.72rem] text-text-muted mt-1" style="display:none;"></div>
+                </div>
+            </div>
+
+            <div class="legal-source-disclaimer mt-4 pt-3.5 border-t border-border/40 text-[0.68rem] text-text-muted leading-relaxed pl-10">
+                <span>⚖️ <strong>Legal Disclaimer:</strong> Tip pooling regulations are highly complex and differ by state and local jurisdiction. This tool calculates shares based on user inputs and public rules current as of <strong>{stateData.lastVerified}</strong> (source: <a href={stateData.sourceUrl} target="_blank" rel="noopener noreferrer" class="underline hover:text-accent">{stateData.sourceName}</a>). This does not constitute legal advice. Please consult an employment attorney or payroll expert to verify compliance.</span>
+            </div>
+        </section>
+
+        <!-- Compliance Status Banner -->
+        <div id="complianceAlert" class="compliance-alert" style="display:none;">
+            <div class="alert-icon text-xl shrink-0"></div>
+            <div>
+                <h4 class="alert-title"></h4>
+                <p class="alert-desc"></p>
+            </div>
+        </div>
+
+        <!-- Calculate Button -->
+        <button class="calculate-btn flex items-center justify-center gap-2.5 w-full py-4 px-6 bg-accent-gradient border-none rounded-lg text-text-on-accent text-[1.05rem] font-bold cursor-pointer mb-4 transition-all duration-250 ease-(--ease-base) shadow-[0_4px_20px_rgba(240,165,0,0.25)] hover:-translate-y-0.5 hover:shadow-[0_6px_28px_rgba(240,165,0,0.35)] active:scale-[0.98] relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-br after:from-[rgba(255,255,255,0.1)] after:to-transparent after:pointer-events-none" id="calculateBtn">
+            Calculate Tips
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+
+        <!-- Results -->
+        <section class="card results-card bg-gradient-to-br from-bg-card to-[rgba(52,211,153,0.03)] border-green rounded-lg p-6 mb-4 transition-all duration-200 ease-(--ease-base) hover:border-[rgba(52,211,153,0.2)]" id="resultsCard" style="display:none;" aria-labelledby="results-heading">
+            <div class="results-header flex items-center justify-between mb-5 flex-wrap gap-3">
+                <h2 id="results-heading" class="text-[1.15rem] font-bold text-text-primary"><span aria-hidden="true">💰</span> Tip Breakdown</h2>
+                <div class="results-actions flex gap-2">
+                    <button class="action-btn flex items-center gap-1 py-1.5 px-3 bg-bg-input border border-border rounded-sm text-text-secondary text-[0.78rem] font-medium cursor-pointer transition-all duration-150 ease-(--ease-base) hover:border-accent hover:text-accent" id="copyBtn" aria-label="Copy results to clipboard">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                        Copy
+                    </button>
+                    <button class="action-btn flex items-center gap-1 py-1.5 px-3 bg-bg-input border border-border rounded-sm text-text-secondary text-[0.78rem] font-medium cursor-pointer transition-all duration-150 ease-(--ease-base) hover:border-accent hover:text-accent" id="printBtn" aria-label="Print results">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <rect x="4" y="10" width="8" height="4" rx="0.5" stroke="currentColor" stroke-width="1.5"/>
+                            <rect x="2" y="5" width="12" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M4 5V2.5A.5.5 0 014.5 2h7a.5.5 0 01.5.5V5" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                        Print
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-summary grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2.5 mb-5" id="resultsSummary">
+                <!-- Summary stats -->
+            </div>
+
+            <div class="results-table-wrap overflow-x-auto mx-[-8px] px-2">
+                <table class="results-table w-full border-collapse" id="resultsTable">
+                    <thead>
+                        <tr id="resultsTableHead">
+                            <!-- Table head rendered by JS -->
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody">
+                        <!-- Table body rendered by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="results-footer mt-4 pt-4 border-t border-border">
+                <p class="transparency-note text-[0.8rem] text-text-secondary leading-relaxed">
+                    <span aria-hidden="true">🔍</span> <strong>Transparency note:</strong> <span id="methodExplanation"></span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Toast notification -->
+        <div class="toast" id="toast" role="status" aria-live="polite">Copied to clipboard!</div>
+
+        <!-- State-Specific SEO Content Section -->
+        <section class="card step-card bg-bg-card/45 border border-border/60 rounded-lg p-6 sm:p-8 mt-6 text-left static-content">
+            <h2 class="text-xl font-bold text-text-primary mb-4">{stateData.contentTitle}</h2>
+            {stateData.paragraphs.map(paragraph => (
+                <p class="text-sm text-text-secondary leading-relaxed mb-4" set:html={paragraph} />
+            ))}
+        </section>
+
+        <!-- State-Specific FAQ Section -->
+        <section class="card step-card bg-bg-card/45 border border-border/60 rounded-lg p-6 sm:p-8 mt-6 text-left static-content faq-section">
+            <h2 class="text-xl font-bold text-text-primary mb-6">{stateData.name} Tip Pooling FAQ</h2>
+            
+            <div class="faq-list flex flex-col gap-2">
+                {stateData.faqs.map(faq => (
+                    <details class="faq-accordion">
+                        <summary class="faq-question">
+                            <span>{faq.question}</span>
+                            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p set:html={faq.answer} />
+                        </div>
+                    </details>
+                ))}
+            </div>
+        </section>
+
+        <!-- Dynamic Internal Cross-linking -->
+        <section class="card step-card bg-bg-card/45 border border-border/60 rounded-lg p-6 sm:p-8 mt-6 text-center static-content">
+            <h3 class="text-md font-bold text-text-primary mb-3">Calculating Tips in Another State?</h3>
+            <p class="text-sm text-text-secondary mb-4">Select one of our dedicated state-specific tip pooling calculators:</p>
+            <div class="flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-text-secondary">
+                {otherStates.map((s, index) => (
+                    <>
+                        <a href={`/${s.slug}-tip-pooling-calculator`} class="text-accent hover:underline no-underline">{s.name}</a>
+                        {index < otherStates.length - 1 && <span class="w-1 h-1 rounded-full bg-border" aria-hidden="true"></span>}
+                    </>
+                ))}
+                <span class="w-1 h-1 rounded-full bg-border" aria-hidden="true"></span>
+                <a href="/" class="hover:text-accent hover:underline no-underline">National Calculator (Federal Rules)</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer text-center mt-8 pt-5">
+            <p class="text-text-muted text-[0.78rem] mb-3">100% free · No sign-up · Your data stays in your browser</p>
+            <nav class="footer-links flex justify-center gap-4 text-[0.75rem] font-medium text-text-secondary" aria-label="Footer Navigation">
+                <a href="/privacy" class="hover:text-accent transition-colors duration-150 no-underline">Privacy Policy</a>
+                <span class="text-text-muted" aria-hidden="true">•</span>
+                <a href="/terms" class="hover:text-accent transition-colors duration-150 no-underline">Terms & Conditions</a>
+                <span class="text-text-muted" aria-hidden="true">•</span>
+                <a href="/contact" class="hover:text-accent transition-colors duration-150 no-underline">Contact Us</a>
+            </nav>
+            <p class="text-text-muted text-[0.65rem] mt-4 opacity-75 max-w-sm mx-auto leading-normal">
+                TipSplit is reader-supported. We may earn a small commission through affiliate links on this site at no extra cost to you.
+            </p>
+        </footer>
+    </main>
+</Layout>
+
+<!-- FAQ JSON-LD Schema for SEO -->
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+<script>
+    import '../scripts/calculator.js';
+</script>

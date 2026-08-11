@@ -135,7 +135,11 @@
         setTimeout(() => totalTipsInput.focus(), 300);
 
         // Run compliance check initially
-        validateCompliance();
+        if (stateSelect) {
+            handleStateChange();
+        } else {
+            validateCompliance();
+        }
     }
 
     // ─── State & Wage Settings Change ────────
