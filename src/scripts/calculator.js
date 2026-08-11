@@ -143,7 +143,7 @@
             });
         });
         addMemberBtn.addEventListener('click', () => addMember());
-        calculateBtn.addEventListener('click', calculate);
+        calculateBtn.addEventListener('click', () => calculate(false));
         copyBtn.addEventListener('click', copyResults);
         printBtn.addEventListener('click', () => window.print());
         if (pdfBtn) pdfBtn.addEventListener('click', () => loadJsPdf(generatePdf));
